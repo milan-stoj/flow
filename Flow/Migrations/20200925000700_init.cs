@@ -1,10 +1,9 @@
 ﻿using System;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace Flow.Data.Migrations
+namespace Flow.Migrations
 {
-    public partial class CreateIdentitySchema : Migration
+    public partial class init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -48,11 +47,24 @@ namespace Flow.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Plant",
+                columns: table => new
+                {
+                    ID = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Plant", x => x.ID);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "AspNetRoleClaims",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     RoleId = table.Column<string>(nullable: false),
                     ClaimType = table.Column<string>(nullable: true),
                     ClaimValue = table.Column<string>(nullable: true)
@@ -73,7 +85,7 @@ namespace Flow.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     UserId = table.Column<string>(nullable: false),
                     ClaimType = table.Column<string>(nullable: true),
                     ClaimValue = table.Column<string>(nullable: true)
@@ -153,6 +165,18 @@ namespace Flow.Data.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.InsertData(
+                table: "AspNetRoles",
+                columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
+                values: new object[,]
+                {
+                    { "da6cc64e-d9f4-4382-90c6-08fde2a3a645", "23b9e2a5-cf38-45b9-b6f6-f60350725048", "Administrator", "ADMINISTRATOR" },
+                    { "20f2ea25-3701-4fa0-9538-358d7de800a8", "8e37a3b0-2669-4db4-9b21-f09313a150b7", "Supervisor", "SUPERVISOR" },
+                    { "9a0391c7-1173-490b-838e-5c801367ac21", "a92f095d-3c32-479a-b619-19b0f5d7e68d", "QA", "QA" },
+                    { "b4121c30-0336-46c4-b2bc-b051366ff6f3", "8f45a013-e7ad-4aa9-97f0-5b1f72870f23", "MfgEngineer", "MFGENGINEER" },
+                    { "2a77c338-6303-4e4b-a122-c85614e4c32d", "df389d61-f48c-4768-8cb4-436c38e55378", "Operator", "OPERATOR" }
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -209,6 +233,9 @@ namespace Flow.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUserTokens");
+
+            migrationBuilder.DropTable(
+                name: "Plant");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
