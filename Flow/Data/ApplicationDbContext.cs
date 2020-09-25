@@ -5,10 +5,12 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Flow.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Identity.Core;
+using Microsoft.Extensions.Options;
 
 namespace Flow.Data
 {
-    public class ApplicationDbContext : IdentityDbContext
+    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
@@ -18,36 +20,56 @@ namespace Flow.Data
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
-
-            builder.Entity<IdentityRole>()
-                .HasData(
-                new IdentityRole
+            const string ADMIN_ID = "a18be9c0-aa65-4af8-bd17-00bd9344e575";
+            const string ROLE_ID = ADMIN_ID;
+            builder.Entity<IdentityRole>().HasData(
+            new IdentityRole
                 {
-                    Name = "Administrator",
-                    NormalizedName = "ADMINISTRATOR"
+                Id = ROLE_ID,
+                Name = "Administrator",
+                NormalizedName = "ADMINISTRATOR"
                 },
-                new IdentityRole
+    
+            new IdentityRole
                 {
-                    Name = "Supervisor",
-                    NormalizedName = "SUPERVISOR"
+                Name = "Supervisor",
+                NormalizedName = "SUPERVISOR"
                 },
-                new IdentityRole
+            new IdentityRole
                 {
-                    Name = "QA",
-                    NormalizedName = "QA"
+                Name = "QA",
+                NormalizedName = "QA"
                 },
-                new IdentityRole
+            new IdentityRole
                 {
-                    Name = "MfgEngineer",
-                    NormalizedName = "MFGENGINEER"
+                Name = "MfgEngineer",
+                NormalizedName = "MFGENGINEER"
                 },
-                new IdentityRole
+            new IdentityRole
                 {
-                    Name = "Operator",
-                    NormalizedName = "OPERATOR"
+                Name = "Operator",
+                NormalizedName = "OPERATOR"
                 }
-                    );
+            );
+
+            builder.Entity<ApplicationUser>().HasData(new ApplicationUser
+            {
+                Id = ADMIN_ID,
+                UserName = "admin@company.com",
+                NormalizedUserName = "ADMIN@COMPANY.COM",
+                Email = "admin@company.com",
+                NormalizedEmail = "admin@company.com",
+                EmailConfirmed = true,
+                UserRole = "Administrator",
+                PasswordHash = "AQAAAAEAACcQAAAAEMeAin6TChHcMUl7NqSrLtNvCxK/ih/DMBlA0thAy6MWsmlIgRk1gvyFPqPOVgNiLA==",
+                SecurityStamp = string.Empty
+            });
+            builder.Entity<IdentityUserRole<string>>().HasData(new IdentityUserRole<string>
+            {
+                RoleId = ROLE_ID,
+                UserId = ADMIN_ID
+            });
         }
-        public DbSet<Flow.Models.Plant> Plant { get; set; }
+        public DbSet<Plant> Plant { get; set; }
     }
 }
