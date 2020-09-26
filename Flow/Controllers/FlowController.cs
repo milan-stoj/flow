@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Flow.Data;
+using Flow.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -18,7 +19,18 @@ namespace Flow.Controllers
         }
         public IActionResult Index()
         {
-            return View();
+            FlowIndexViewModel flowIndexViewModel = new FlowIndexViewModel()
+            {
+                ActiveDepartments = _context.Plant.Count(),
+                ActiveEmployees = _context.Users.Count(),
+                ActivePlants = _context.Plant.Count(),
+                //ActiveWorkstations = _context.Workstation.Count();
+                ActiveEngineers = _context.Users.Where(u => u.UserRole == "QA" || u.UserRole == "MfgEngineer").Count(),
+                ActiveSupervisors= _context.Users.Where(u => u.UserRole == "Supervisor").Count(),
+                ActiveOperators= _context.Users.Where(u => u.UserRole == "Operator").Count(),
+            };
+
+            return View(flowIndexViewModel);
         }
     }
 }
