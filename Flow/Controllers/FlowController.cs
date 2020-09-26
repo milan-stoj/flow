@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Flow.Controllers
 {
-    [Authorize(Roles = "Administrator")]
+    [Authorize(Roles = "Administrator, Supervisor, QA, MfgEngineer")]
     public class FlowController : Controller
     {
         private readonly ApplicationDbContext _context;

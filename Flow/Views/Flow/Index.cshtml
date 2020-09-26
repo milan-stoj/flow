@@ -2,31 +2,12 @@
 
 @{
     ViewData["Title"] = "Index";
-    Layout = "_AdminLayout";
 }
 
 <h1 class="display-4">Flow Insights</h1>
-<div class="d-flex">
-    <div class="p-2 flex-grow-1">
-        <div class="card" style="height: 500px">
-            <div class="card-body">
-                <div id="piechart" style="height: 100%" ; width: 100%;"></div>
-            </div>
-        </div>
-    </div>
-    <div class="p-2 flex-grow-3">
-        <div class="card">
-            <div class="card-body">
-                <div id="speedometer"></div>
-            </div>
-        </div>
-    </div>
-    <div class="p-2 flex-grow-3">
-            </div>
-</div>
 <div class="d-flex bd-highlight">
     <div class="p-2 flex-fill bd-highlight">
-        <div class="dash-card bg-c-blue order-dash-card">
+        <div class="dash-card bg-c-dark order-dash-card">
             <div class="dash-card-block">
                 <a asp-controller="Departments" style="color: white;">
                 <h6 class="m-b-20">Active Departments</h6>
@@ -38,7 +19,7 @@
         </div> 
     </div>
     <div class="p-2 flex-fill bd-highlight">
-        <div class="dash-card bg-c-blue order-dash-card">
+        <div class="dash-card bg-c-dark order-dash-card">
             <div class="dash-card-block">
                 <h6 class="m-b-20">Active Employees</h6>
                 <h2 class="text-right"><i class="fa fa-users f-left"></i><span>@Model.ActiveEmployees</span></h2>
@@ -52,14 +33,33 @@
         </div> 
     </div>
     <div class="p-2 flex-fill bd-highlight">
-        <div class="dash-card bg-c-blue order-dash-card">
+        <div class="dash-card bg-c-dark order-dash-card">
             <div class="dash-card-block">
-                <h6 class="m-b-20">Active Employees</h6>
+                <h6 class="m-b-20">Units Completed</h6>
                 <h2 class="text-right"><i class="fa fa-cart-plus f-left"></i><span>@Model.ActiveEmployees</span></h2>
-                <p class="m-b-0">Completed Orders<span class="f-right">351</span></p>
+                <p class="m-b-0"><span class="f-right">351</span></p>
             </div>
         </div> 
     </div>
+</div>
+
+<div class="d-flex">
+    <div class="p-2 flex-grow-1">
+        <div class="dash-card bg-c-dark">
+            <div class="dash-card-block">
+                <div id="line" style="height: 100%" ; width: 100%;"></div>
+            </div>
+        </div>
+    </div>
+    <div class="p-2 flex-grow-3">
+        <div class="dash-card bg-c-dark">
+            <div class="dash-card-block">
+                <div id="speedometer"></div>
+            </div>
+        </div>
+    </div>
+    <div class="p-2 flex-grow-3">
+            </div>
 </div>
 
 <head>
@@ -81,6 +81,7 @@
                 yellowFrom: 50, yellowTo: 75,
                 greenFrom: 75, greenTo: 100,
                 minorTicks: 10,
+                backgroundColor: 'transparent',
             };
 
             var chart = new google.visualization.Gauge(document.getElementById('speedometer'));
@@ -95,36 +96,46 @@
     </script>
     <script type="text/javascript">
 
-        // Load the Visualization API and the corechart package.
-        google.charts.load('current', { 'packages': ['corechart'] });
+        google.charts.load('current', { packages: ['corechart', 'line'] });
+        google.charts.setOnLoadCallback(drawCurveTypes);
 
-        // Set a callback to run when the Google Visualization API is loaded.
-        google.charts.setOnLoadCallback(drawChart);
-
-        // Callback that creates and populates a data table,
-        // instantiates the pie chart, passes in the data and
-        // draws it.
-        function drawChart() {
-
-            // Create the data table.
+        function drawCurveTypes() {
             var data = new google.visualization.DataTable();
-            data.addColumn('string', 'Topping');
-            data.addColumn('number', 'Slices');
+            data.addColumn('number', 'X');
+            data.addColumn('number', 'Dogs');
+            data.addColumn('number', 'Cats');
+
             data.addRows([
-                ['Mushrooms', 3],
-                ['Onions', 1],
-                ['Olives', 1],
-                ['Zucchini', 1],
-                ['Pepperoni', 2]
+                [0, 0, 0], [1, 10, 5], [2, 23, 15], [3, 17, 9], [4, 18, 10], [5, 9, 5],
+                [6, 11, 3], [7, 27, 19], [8, 33, 25], [9, 40, 32], [10, 32, 24], [11, 35, 27],
+                [12, 30, 22], [13, 40, 32], [14, 42, 34], [15, 47, 39], [16, 44, 36], [17, 48, 40],
+                [18, 52, 44], [19, 54, 46], [20, 42, 34], [21, 55, 47], [22, 56, 48], [23, 57, 49],
+                [24, 60, 52], [25, 50, 42], [26, 52, 44], [27, 51, 43], [28, 49, 41], [29, 53, 45],
+                [30, 55, 47], [31, 60, 52], [32, 61, 53], [33, 59, 51], [34, 62, 54], [35, 65, 57],
+                [36, 62, 54], [37, 58, 50], [38, 55, 47], [39, 61, 53], [40, 64, 56], [41, 65, 57],
+                [42, 63, 55], [43, 66, 58], [44, 67, 59], [45, 69, 61], [46, 69, 61], [47, 70, 62],
+                [48, 72, 64], [49, 68, 60], [50, 66, 58], [51, 65, 57], [52, 67, 59], [53, 70, 62],
+                [54, 71, 63], [55, 72, 64], [56, 73, 65], [57, 75, 67], [58, 70, 62], [59, 68, 60],
+                [60, 64, 56], [61, 60, 52], [62, 65, 57], [63, 67, 59], [64, 68, 60], [65, 69, 61],
+                [66, 70, 62], [67, 72, 64], [68, 75, 67], [69, 80, 72]
             ]);
 
-            // Set chart options
             var options = {
-
+                hAxis: {
+                    textStyle: { color: '#FFF' },
+                    title: 'Time',
+                },
+                vAxis: {
+                    textStyle: {color: '#FFF'},
+                    title: 'Popularity'
+                },
+                series: {
+                    1: { curveType: 'function' }
+                },
+                backgroundColor : 'transparent'
             };
 
-            // Instantiate and draw our chart, passing in some options.
-            var chart = new google.visualization.PieChart(document.getElementById('piechart'));
+            var chart = new google.visualization.LineChart(document.getElementById('line'));
             chart.draw(data, options);
         }
     </script>

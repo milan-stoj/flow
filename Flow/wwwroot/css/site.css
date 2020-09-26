@@ -1,12 +1,14 @@
 ﻿/* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
 for details on configuring this project to bundle and minify static web assets. */
 
+::-webkit-scrollbar {
+    display: none;
+}
+
 a.navbar-brand {
-    background:url("../flowgo.png");
-  background-size: contain;
-  display: block;
-  height: 25px;
-  width: 75px;
+    white-space: normal;
+    text-align: center;
+    word-break: break-all;
 }
 
 /* Provide sufficient contrast against white background */
@@ -92,11 +94,15 @@ body {
     background: linear-gradient(45deg,#FF5370,#ff869a);
 }
 
+.bg-c-dark {
+    background: linear-gradient(90deg, #343a40, #24282c);
+}
+
 
 .dash-card {
-    border-radius: 5px;
+    border-radius: 10px;
     -webkit-box-shadow: 0 1px 2.94px 0.06px rgba(4,26,55,0.16);
-    box-shadow: 0 1px 2.94px 0.06px rgba(4,26,55,0.16);
+    box-shadow: -0.5rem 0.5rem 5px 0px rgba(4,26,55,0.16);
     border: none;
     margin-bottom: 30px;
     -webkit-transition: all 0.3s ease-in-out;
@@ -119,3 +125,4 @@ body {
 .f-right {
     float: right;
 }
+

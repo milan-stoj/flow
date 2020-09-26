@@ -4,7 +4,7 @@
     ViewData["Title"] = $"Department {Model.Department.Code} - {Model.Department.Name}";
 }
 
-<h1>Details</h1>
+<h1 class="display-4">Details</h1>
 
 <div>
     <h4>Department @Model.Department.Code - @Model.Department.Name</h4>
@@ -35,11 +35,8 @@
     <a asp-action="Index">Back to List</a>
 </div>
 
-<h1>Workstations</h1>
-<p>
-    <a asp-controller="Workstations" asp-action="Create" asp-route-id="@Model.Department.ID">Create New</a>
-</p>
-<table class="table">
+<h1 class="display-4 pt-5">Workstations</h1>
+<table class="table table-dark table-striped table-bordered">
     <thead>
         <tr>
             <th>
@@ -70,3 +67,7 @@
         }
     </tbody>
 </table>
+<p>
+    <a asp-controller="Workstations" asp-action="Create" asp-route-id="@Model.Department.ID" class="btn btn-dark btn-sm">Create New</a>
+</p>
+

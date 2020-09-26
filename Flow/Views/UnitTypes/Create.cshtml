@@ -1,0 +1,45 @@
+﻿@model Flow.Models.UnitType
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>Unit Type</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Prefix" class="control-label"></label>
+                <input asp-for="Prefix" class="form-control" />
+                <span asp-validation-for="Prefix" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Description" class="control-label"></label>
+                <textarea asp-for="Description" class="form-control" cols="20" rows="2"></textarea>
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="WorkInstructions" class="control-label"></label>
+                <textarea asp-for="WorkInstructions" class="form-control" cols="40" rows="5"></textarea>
+                <span asp-validation-for="WorkInstructions" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="StandardRate" class="control-label"></label>
+                <input asp-for="StandardRate" class="form-control" />
+                <span asp-validation-for="StandardRate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+

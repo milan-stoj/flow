@@ -75,5 +75,6 @@ namespace Flow.Data
         public DbSet<Unit> Units { get; set; }
         public DbSet<UnitLog> UnitLogs { get; set; }
         public DbSet<Workstation> Workstations { get; set; }
+        public DbSet<Flow.Models.UnitType> UnitType { get; set; }
     }
 }

@@ -1,22 +1,25 @@
-﻿@model IEnumerable<Flow.Models.Department>
+﻿@model IEnumerable<Flow.Models.UnitType>
 
 @{
     ViewData["Title"] = "Index";
 }
 
-<h1 class="display-4">Departments</h1>
+<h1 class="display-4">Unit Management</h1>
 
 <table class="table table-striped table-bordered shadow-sm">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Code)
+                @Html.DisplayNameFor(model => model.Prefix)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Name)
+                @Html.DisplayNameFor(model => model.Description)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Bay)
+                @Html.DisplayNameFor(model => model.WorkInstructions)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.StandardRate)
             </th>
             <th></th>
         </tr>
@@ -25,13 +28,16 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Code)
+                @Html.DisplayFor(modelItem => item.Prefix)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Name)
+                @Html.DisplayFor(modelItem => item.Description)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Bay)
+                @Html.DisplayFor(modelItem => item.WorkInstructions)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.StandardRate)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
@@ -42,6 +48,7 @@
 }
     </tbody>
 </table>
+
 <p>
     <a class="btn btn-sm btn-dark" asp-action="Create">Create New</a>
 </p>
