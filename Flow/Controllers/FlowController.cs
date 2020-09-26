@@ -21,9 +21,8 @@ namespace Flow.Controllers
         {
             FlowIndexViewModel flowIndexViewModel = new FlowIndexViewModel()
             {
-                ActiveDepartments = _context.Plant.Count(),
+                ActiveDepartments = _context.Department.Count(),
                 ActiveEmployees = _context.Users.Count(),
-                ActivePlants = _context.Plant.Count(),
                 //ActiveWorkstations = _context.Workstation.Count();
                 ActiveEngineers = _context.Users.Where(u => u.UserRole == "QA" || u.UserRole == "MfgEngineer").Count(),
                 ActiveSupervisors= _context.Users.Where(u => u.UserRole == "Supervisor").Count(),

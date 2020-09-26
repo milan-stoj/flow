@@ -7,28 +7,26 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Flow.Data;
 using Flow.Models;
-using Microsoft.AspNetCore.Authorization.Infrastructure;
-using Microsoft.AspNetCore.Authorization;
+using Flow.ViewModels;
 
 namespace Flow.Controllers
 {
-    [Authorize(Roles = "Administrator")]
-    public class PlantsController : Controller
+    public class DepartmentsController : Controller
     {
         private readonly ApplicationDbContext _context;
 
-        public PlantsController(ApplicationDbContext context)
+        public DepartmentsController(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        // GET: Plants
+        // GET: Departments
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Plant.ToListAsync());
+            return View(await _context.Department.ToListAsync());
         }
 
-        // GET: Plants/Details/5
+        // GET: Departments/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -36,39 +34,43 @@ namespace Flow.Controllers
                 return NotFound();
             }
 
-            var plant = await _context.Plant
-                .FirstOrDefaultAsync(m => m.ID == id);
-            if (plant == null)
+            DepartmentDetailsViewModel departmentDetailsViewModel = new DepartmentDetailsViewModel()
+            {
+                Department = await _context.Department.FirstOrDefaultAsync(d => d.ID == id),
+                Workstations = _context.Workstations.Where(w => w.DepartmentID == id)
+            };
+
+            if (departmentDetailsViewModel.Department == null)
             {
                 return NotFound();
             }
 
-            return View(plant);
+            return View(departmentDetailsViewModel);
         }
-
-        // GET: Plants/Create
+        
+        // GET: Departments/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Plants/Create
+        // POST: Departments/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ID,Name")] Plant plant)
+        public async Task<IActionResult> Create([Bind("ID,Code,Name,Bay")] Department department)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(plant);
+                _context.Add(department);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(plant);
+            return View(department);
         }
 
-        // GET: Plants/Edit/5
+        // GET: Departments/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -76,22 +78,22 @@ namespace Flow.Controllers
                 return NotFound();
             }
 
-            var plant = await _context.Plant.FindAsync(id);
-            if (plant == null)
+            var department = await _context.Department.FindAsync(id);
+            if (department == null)
             {
                 return NotFound();
             }
-            return View(plant);
+            return View(department);
         }
 
-        // POST: Plants/Edit/5
+        // POST: Departments/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ID,Name")] Plant plant)
+        public async Task<IActionResult> Edit(int id, [Bind("ID,Code,Name,Bay")] Department department)
         {
-            if (id != plant.ID)
+            if (id != department.ID)
             {
                 return NotFound();
             }
@@ -100,12 +102,12 @@ namespace Flow.Controllers
             {
                 try
                 {
-                    _context.Update(plant);
+                    _context.Update(department);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!PlantExists(plant.ID))
+                    if (!DepartmentExists(department.ID))
                     {
                         return NotFound();
                     }
@@ -116,10 +118,10 @@ namespace Flow.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(plant);
+            return View(department);
         }
 
-        // GET: Plants/Delete/5
+        // GET: Departments/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -127,30 +129,30 @@ namespace Flow.Controllers
                 return NotFound();
             }
 
-            var plant = await _context.Plant
+            var department = await _context.Department
                 .FirstOrDefaultAsync(m => m.ID == id);
-            if (plant == null)
+            if (department == null)
             {
                 return NotFound();
             }
 
-            return View(plant);
+            return View(department);
         }
 
-        // POST: Plants/Delete/5
+        // POST: Departments/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var plant = await _context.Plant.FindAsync(id);
-            _context.Plant.Remove(plant);
+            var department = await _context.Department.FindAsync(id);
+            _context.Department.Remove(department);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool PlantExists(int id)
+        private bool DepartmentExists(int id)
         {
-            return _context.Plant.Any(e => e.ID == id);
+            return _context.Department.Any(e => e.ID == id);
         }
     }
 }

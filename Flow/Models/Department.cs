@@ -12,8 +12,8 @@ namespace Flow.Models
         [Key]
         public int ID { get; set; }
 
-        [ForeignKey("Plant")]
-        public int PlantID { get; set; }
-        public virtual Plant Plant { get; set; }
+        public int Code { get; set; }
+        public string Name { get; set; }
+        public string Bay { get; set; }
     }
 }

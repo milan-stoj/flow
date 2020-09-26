@@ -20,8 +20,12 @@ namespace Flow.Models.Logs
         public virtual Workstation Workstation { get; set; }
         
         [ForeignKey("ApplicationUser")]
-        public int ApplicationUserID { get; set; }
+        public string ApplicationUserID { get; set; }
         public virtual ApplicationUser ApplicationUser { get; set; }
+
+        [ForeignKey("Unit")]
+        public int UnitID { get; set; }
+        public virtual Unit Unit { get; set; }
 
     }
 }

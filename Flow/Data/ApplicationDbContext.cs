@@ -7,6 +7,7 @@ using Flow.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Identity.Core;
 using Microsoft.Extensions.Options;
+using Flow.Models.Logs;
 
 namespace Flow.Data
 {
@@ -70,6 +71,9 @@ namespace Flow.Data
                 UserId = ADMIN_ID
             });
         }
-        public DbSet<Plant> Plant { get; set; }
+        public DbSet<Department> Department { get; set; }
+        public DbSet<Unit> Units { get; set; }
+        public DbSet<UnitLog> UnitLogs { get; set; }
+        public DbSet<Workstation> Workstations { get; set; }
     }
 }
