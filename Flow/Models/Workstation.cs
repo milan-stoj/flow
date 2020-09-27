@@ -21,6 +21,11 @@ namespace Flow.Models
 
         public bool QA { get; set; }
 
+        [Display(Name = "Online Employee")]
+        public ApplicationUser? CurrentUser { get; set; }
+
+        [Display(Name = "WIP")]
+        public Unit? CurrentUnit { get; set; }
 
         [ForeignKey("Department")]
         public int DepartmentID { get; set; }

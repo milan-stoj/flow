@@ -48,6 +48,12 @@
             <th>
                 @Html.DisplayNameFor(model => model.Workstations.FirstOrDefault().Online)
             </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Workstations.FirstOrDefault().CurrentUnit)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Workstations.FirstOrDefault().CurrentUser)
+            </th>
             <th></th>
         </tr>
     </thead>
@@ -63,6 +69,12 @@
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Online)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CurrentUnit)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CurrentUser)
                 </td>
                 <td>
                     <a asp-controller="Workstations" asp-action="Edit" asp-route-id="@item.ID">Edit</a> |

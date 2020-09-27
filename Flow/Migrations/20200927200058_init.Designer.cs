@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Flow.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20200927091548_init")]
+    [Migration("20200927200058_init")]
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -108,7 +108,7 @@ namespace Flow.Migrations
                         {
                             Id = "a18be9c0-aa65-4af8-bd17-00bd9344e575",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "05e83df1-72ec-49a2-bf4f-a88af574cf2d",
+                            ConcurrencyStamp = "14be05e3-dd73-462d-b2b4-fa018ebb16f9",
                             Email = "admin@company.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
@@ -234,6 +234,12 @@ namespace Flow.Migrations
                     b.Property<int>("Code")
                         .HasColumnType("int");
 
+                    b.Property<int?>("CurrentUnitID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("CurrentUserId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<int>("DepartmentID")
                         .HasColumnType("int");
 
@@ -247,6 +253,10 @@ namespace Flow.Migrations
                         .HasColumnType("bit");
 
                     b.HasKey("ID");
+
+                    b.HasIndex("CurrentUnitID");
+
+                    b.HasIndex("CurrentUserId");
 
                     b.HasIndex("DepartmentID");
 
@@ -283,35 +293,35 @@ namespace Flow.Migrations
                         new
                         {
                             Id = "a18be9c0-aa65-4af8-bd17-00bd9344e575",
-                            ConcurrencyStamp = "bcd3d144-bd79-4080-8fc7-e0e95daf2174",
+                            ConcurrencyStamp = "24ba57a6-3393-40af-a532-0d9cdf93f843",
                             Name = "Administrator",
                             NormalizedName = "ADMINISTRATOR"
                         },
                         new
                         {
-                            Id = "b343bf6f-37d3-43a4-aa61-69833be72f95",
-                            ConcurrencyStamp = "764d29a1-a808-4825-a32d-fb50f4f3cc34",
+                            Id = "67e2d28b-54ed-4575-9461-16bd608e3046",
+                            ConcurrencyStamp = "25f24c4e-0750-48ec-9df6-2edc14607608",
                             Name = "Supervisor",
                             NormalizedName = "SUPERVISOR"
                         },
                         new
                         {
-                            Id = "d6a07fd1-3c03-4d77-b22d-d112fe5f4c14",
-                            ConcurrencyStamp = "005122ab-a636-45ea-8ad7-466c7cd6cd70",
+                            Id = "d67f015b-59d9-4f3a-aac7-eff05e57a1ed",
+                            ConcurrencyStamp = "7b1b5c27-1533-48d7-9ad6-0a8ef2d35000",
                             Name = "QA",
                             NormalizedName = "QA"
                         },
                         new
                         {
-                            Id = "67a9e9b3-adad-40bb-915f-6028289f44ad",
-                            ConcurrencyStamp = "90974fb5-f832-4d6f-b190-d6b32c537f76",
+                            Id = "8f49dc8d-a1bd-42a1-82e9-ff1eac534a89",
+                            ConcurrencyStamp = "ca45aaba-1f67-40ea-8972-a2b5e1a1792d",
                             Name = "MfgEngineer",
                             NormalizedName = "MFGENGINEER"
                         },
                         new
                         {
-                            Id = "7821aac6-4a9e-4eca-b048-c85b086aba89",
-                            ConcurrencyStamp = "d649d311-2c24-4dac-9aea-16cf095ba12c",
+                            Id = "f1f4475f-755d-4676-9783-b5ba38165ee3",
+                            ConcurrencyStamp = "4e0d4913-cf47-41ab-83be-01b6f14fbf0a",
                             Name = "Operator",
                             NormalizedName = "OPERATOR"
                         });
@@ -462,6 +472,14 @@ namespace Flow.Migrations
 
             modelBuilder.Entity("Flow.Models.Workstation", b =>
                 {
+                    b.HasOne("Flow.Models.Unit", "CurrentUnit")
+                        .WithMany()
+                        .HasForeignKey("CurrentUnitID");
+
+                    b.HasOne("Flow.Models.ApplicationUser", "CurrentUser")
+                        .WithMany()
+                        .HasForeignKey("CurrentUserId");
+
                     b.HasOne("Flow.Models.Department", "Department")
                         .WithMany()
                         .HasForeignKey("DepartmentID")
