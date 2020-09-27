@@ -272,17 +272,17 @@ namespace Flow.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "a18be9c0-aa65-4af8-bd17-00bd9344e575", "1addf518-4ae3-43c7-b9a1-8be2c0e39c4d", "Administrator", "ADMINISTRATOR" },
-                    { "dd49c3e1-6e94-474d-ab46-ce84d0265caf", "6d82a68b-861a-457a-9b60-a0fb753d25fe", "Supervisor", "SUPERVISOR" },
-                    { "b28d3ba5-ff0d-4c7b-9c9a-67a7ed6e06db", "8ed621c2-3b96-44b4-940d-c0699b754233", "QA", "QA" },
-                    { "2c4c6bfd-5fb5-4223-ada0-cbbabd6edc07", "c674c38e-da3b-4534-b7f2-a5ce85602a74", "MfgEngineer", "MFGENGINEER" },
-                    { "96ac3d59-0a35-4e35-b61d-3bbac2c069b5", "d878bdbd-5318-4ad7-8f9e-a83c59f51691", "Operator", "OPERATOR" }
+                    { "a18be9c0-aa65-4af8-bd17-00bd9344e575", "bcd3d144-bd79-4080-8fc7-e0e95daf2174", "Administrator", "ADMINISTRATOR" },
+                    { "b343bf6f-37d3-43a4-aa61-69833be72f95", "764d29a1-a808-4825-a32d-fb50f4f3cc34", "Supervisor", "SUPERVISOR" },
+                    { "d6a07fd1-3c03-4d77-b22d-d112fe5f4c14", "005122ab-a636-45ea-8ad7-466c7cd6cd70", "QA", "QA" },
+                    { "67a9e9b3-adad-40bb-915f-6028289f44ad", "90974fb5-f832-4d6f-b190-d6b32c537f76", "MfgEngineer", "MFGENGINEER" },
+                    { "7821aac6-4a9e-4eca-b048-c85b086aba89", "d649d311-2c24-4dac-9aea-16cf095ba12c", "Operator", "OPERATOR" }
                 });
 
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "FirstName", "LastName", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TotalRate", "TotalTime", "TwoFactorEnabled", "UnitsCompleted", "UserName", "UserRole" },
-                values: new object[] { "a18be9c0-aa65-4af8-bd17-00bd9344e575", 0, "65ea3161-d043-4c6f-82ac-cffc9792efad", "admin@company.com", true, null, null, false, null, "admin@company.com", "ADMIN@COMPANY.COM", "AQAAAAEAACcQAAAAEMeAin6TChHcMUl7NqSrLtNvCxK/ih/DMBlA0thAy6MWsmlIgRk1gvyFPqPOVgNiLA==", null, false, "", 0.0, 0.0, false, 0, "admin@company.com", "Administrator" });
+                values: new object[] { "a18be9c0-aa65-4af8-bd17-00bd9344e575", 0, "05e83df1-72ec-49a2-bf4f-a88af574cf2d", "admin@company.com", true, null, null, false, null, "admin@company.com", "ADMIN@COMPANY.COM", "AQAAAAEAACcQAAAAEMeAin6TChHcMUl7NqSrLtNvCxK/ih/DMBlA0thAy6MWsmlIgRk1gvyFPqPOVgNiLA==", null, false, "", 0.0, 0.0, false, 0, "admin@company.com", "Administrator" });
 
             migrationBuilder.InsertData(
                 table: "AspNetUserRoles",

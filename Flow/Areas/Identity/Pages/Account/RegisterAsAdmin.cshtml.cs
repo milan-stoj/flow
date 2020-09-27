@@ -19,18 +19,18 @@ using Microsoft.Extensions.Logging;
 namespace Flow.Areas.Identity.Pages.Account
 {
     [AllowAnonymous]
-    public class RegisterModel : PageModel
+    public class RegisterAsAdminModel : PageModel
     {
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly ILogger<RegisterModel> _logger;
+        private readonly ILogger<RegisterAsAdminModel> _logger;
         private readonly IEmailSender _emailSender;
         public List<SelectListItem> Roles { get; }
 
-        public RegisterModel(
+        public RegisterAsAdminModel(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
-            ILogger<RegisterModel> logger,
+            ILogger<RegisterAsAdminModel> logger,
             IEmailSender emailSender)
         {
             Roles = new List<SelectListItem>
@@ -56,15 +56,6 @@ namespace Flow.Areas.Identity.Pages.Account
 
         public class InputModel
         {
-            [Required]
-            [Display(Name = "First Name")]
-            public string FirstName { get; set; }
-            
-            [Required]
-            [Display(Name = "Last Name")]
-            public string LastName { get; set; }
-            
-
             [Required]
             [EmailAddress]
             [Display(Name = "Email")]
@@ -94,15 +85,13 @@ namespace Flow.Areas.Identity.Pages.Account
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
-            returnUrl = returnUrl ?? Url.Content("~/");
+            returnUrl = returnUrl ?? Url.Content("/Employees/Index");
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
             {
                 var user = new ApplicationUser {
                     UserName = Input.Email,
                     Email = Input.Email,
-                    FirstName = Input.FirstName,
-                    LastName = Input.LastName,
                     UserRole = Input.UserRole
                 };
                 var result = await _userManager.CreateAsync(user, Input.Password);
@@ -128,7 +117,6 @@ namespace Flow.Areas.Identity.Pages.Account
                     }
                     else
                     {
-                        await _signInManager.SignInAsync(user, isPersistent: false);
                         return LocalRedirect(returnUrl);
                     }
                 }

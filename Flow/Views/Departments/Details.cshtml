@@ -40,7 +40,7 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Workstations.FirstOrDefault().ID)
+                @Html.DisplayNameFor(model => model.Workstations.FirstOrDefault().Code)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Workstations.FirstOrDefault().Name)
@@ -56,7 +56,7 @@
         {
             <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => item.ID)
+                    @Html.DisplayFor(modelItem => item.Code)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Name)
