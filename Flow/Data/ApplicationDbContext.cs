@@ -71,10 +71,10 @@ namespace Flow.Data
                 UserId = ADMIN_ID
             });
         }
-        public DbSet<Department> Department { get; set; }
+        public DbSet<Department> Departments { get; set; }
         public DbSet<Unit> Units { get; set; }
         public DbSet<UnitLog> UnitLogs { get; set; }
         public DbSet<Workstation> Workstations { get; set; }
-        public DbSet<Flow.Models.UnitType> UnitType { get; set; }
+        public DbSet<UnitType> UnitTypes { get; set; }
     }
 }

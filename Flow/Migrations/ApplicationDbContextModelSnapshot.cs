@@ -106,7 +106,7 @@ namespace Flow.Migrations
                         {
                             Id = "a18be9c0-aa65-4af8-bd17-00bd9344e575",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "8542ba6a-4712-4a2e-b0d7-df4549c3f713",
+                            ConcurrencyStamp = "65ea3161-d043-4c6f-82ac-cffc9792efad",
                             Email = "admin@company.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
@@ -142,7 +142,7 @@ namespace Flow.Migrations
 
                     b.HasKey("ID");
 
-                    b.ToTable("Department");
+                    b.ToTable("Departments");
                 });
 
             modelBuilder.Entity("Flow.Models.Logs.UnitLog", b =>
@@ -219,7 +219,7 @@ namespace Flow.Migrations
 
                     b.HasKey("ID");
 
-                    b.ToTable("UnitType");
+                    b.ToTable("UnitTypes");
                 });
 
             modelBuilder.Entity("Flow.Models.Workstation", b =>
@@ -281,35 +281,35 @@ namespace Flow.Migrations
                         new
                         {
                             Id = "a18be9c0-aa65-4af8-bd17-00bd9344e575",
-                            ConcurrencyStamp = "26346825-08f2-4220-9503-ced57718e34e",
+                            ConcurrencyStamp = "1addf518-4ae3-43c7-b9a1-8be2c0e39c4d",
                             Name = "Administrator",
                             NormalizedName = "ADMINISTRATOR"
                         },
                         new
                         {
-                            Id = "38b494f6-48d2-4899-8fa7-56860c0a3d4c",
-                            ConcurrencyStamp = "359b75cd-53c3-4a0f-8680-d4f0f840de2f",
+                            Id = "dd49c3e1-6e94-474d-ab46-ce84d0265caf",
+                            ConcurrencyStamp = "6d82a68b-861a-457a-9b60-a0fb753d25fe",
                             Name = "Supervisor",
                             NormalizedName = "SUPERVISOR"
                         },
                         new
                         {
-                            Id = "79018cd0-1d10-4a1d-a90c-5577a9c95cce",
-                            ConcurrencyStamp = "38374fdf-bd70-4c8e-be70-3480a15eafbb",
+                            Id = "b28d3ba5-ff0d-4c7b-9c9a-67a7ed6e06db",
+                            ConcurrencyStamp = "8ed621c2-3b96-44b4-940d-c0699b754233",
                             Name = "QA",
                             NormalizedName = "QA"
                         },
                         new
                         {
-                            Id = "7392f373-86c2-41a7-91ba-68c4c10bdeba",
-                            ConcurrencyStamp = "9b612d00-e188-4b92-a080-c9e0702bd8ec",
+                            Id = "2c4c6bfd-5fb5-4223-ada0-cbbabd6edc07",
+                            ConcurrencyStamp = "c674c38e-da3b-4534-b7f2-a5ce85602a74",
                             Name = "MfgEngineer",
                             NormalizedName = "MFGENGINEER"
                         },
                         new
                         {
-                            Id = "b1ad27f3-3332-442e-8c7b-9f38a635e303",
-                            ConcurrencyStamp = "cfed5fe6-304a-4991-8318-0f7b87451ffb",
+                            Id = "96ac3d59-0a35-4e35-b61d-3bbac2c069b5",
+                            ConcurrencyStamp = "d878bdbd-5318-4ad7-8f9e-a83c59f51691",
                             Name = "Operator",
                             NormalizedName = "OPERATOR"
                         });

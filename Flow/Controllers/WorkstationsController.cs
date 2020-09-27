@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using Flow.Data;
 using Flow.Models;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 
 namespace Flow.Controllers
 {
@@ -18,82 +19,145 @@ namespace Flow.Controllers
             _context = context;
         }
 
-        // GET: WorkstationsController
-        public ActionResult Index()
+        // GET: Workstations
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var applicationDbContext = _context.Workstations.Include(w => w.Department);
+            return View(await applicationDbContext.ToListAsync());
         }
 
-        // GET: WorkstationsController/Details/5
-        public ActionResult Details(int id)
+        // GET: Workstations/Details/5
+        public async Task<IActionResult> Details(int? id)
         {
-            return View();
-        }
+            if (id == null)
+            {
+                return NotFound();
+            }
 
-        // GET: WorkstationsController/Create
-        public IActionResult Create(int? id)
-        {
-            Department department = _context.Department.Single(d => d.ID == id);
-            Workstation workstation = new Workstation();
-            workstation.Department = department;
-            workstation.DepartmentID = department.ID;
+            var workstation = await _context.Workstations
+                .Include(w => w.Department)
+                .FirstOrDefaultAsync(m => m.ID == id);
+            if (workstation == null)
+            {
+                return NotFound();
+            }
+
             return View(workstation);
         }
 
-        // POST: WorkstationsController/Create
+        // GET: Workstations/Create
+        [HttpGet("Workstations/Create")]
+        public IActionResult Create(int id)
+        {
+            ViewData["DepartmentID"] = id;
+            
+            return View();
+        }
+
+        // POST: Workstations/Create
+        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
+        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ID, Code, Name, Online, Department, DepartmentID")] Workstation workstation)
+        public async Task<IActionResult> Create([Bind("ID,Code,Name,Online,QA,DepartmentID")] Workstation workstation)
         {
             if (ModelState.IsValid)
             {
                 _context.Add(workstation);
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Details", "Departments", new { id = workstation.DepartmentID });
+
             }
+            ViewData["DepartmentID"] = new SelectList(_context.Departments, "ID", "ID", workstation.DepartmentID);
             return View(workstation);
         }
 
-        // GET: WorkstationsController/Edit/5
-        public ActionResult Edit(int id)
+        // GET: Workstations/Edit/5
+        public async Task<IActionResult> Edit(int? id)
         {
-            return View();
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var workstation = await _context.Workstations.FindAsync(id);
+            if (workstation == null)
+            {
+                return NotFound();
+            }
+            ViewData["DepartmentID"] = new SelectList(_context.Departments, "ID", "ID", workstation.DepartmentID);
+            return View(workstation);
         }
 
-        // POST: WorkstationsController/Edit/5
+        // POST: Workstations/Edit/5
+        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
+        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public async Task<IActionResult> Edit(int id, [Bind("ID,Code,Name,Online,QA,DepartmentID")] Workstation workstation)
         {
-            try
+            if (id != workstation.ID)
             {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _context.Update(workstation);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!WorkstationExists(workstation.ID))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
                 return RedirectToAction(nameof(Index));
             }
-            catch
-            {
-                return View();
-            }
+            ViewData["DepartmentID"] = new SelectList(_context.Departments, "ID", "ID", workstation.DepartmentID);
+            return View(workstation);
         }
 
-        // GET: WorkstationsController/Delete/5
-        public ActionResult Delete(int id)
+        // GET: Workstations/Delete/5
+        public async Task<IActionResult> Delete(int? id)
         {
-            return View();
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var workstation = await _context.Workstations
+                .Include(w => w.Department)
+                .FirstOrDefaultAsync(m => m.ID == id);
+            if (workstation == null)
+            {
+                return NotFound();
+            }
+
+            return View(workstation);
         }
 
-        // POST: WorkstationsController/Delete/5
-        [HttpPost]
+        // POST: Workstations/Delete/5
+        [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            var workstation = await _context.Workstations.FindAsync(id);
+            _context.Workstations.Remove(workstation);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+
+        private bool WorkstationExists(int id)
+        {
+            return _context.Workstations.Any(e => e.ID == id);
         }
     }
 }

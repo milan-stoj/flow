@@ -21,15 +21,30 @@ namespace Flow.Controllers
         {
             FlowIndexViewModel flowIndexViewModel = new FlowIndexViewModel()
             {
-                ActiveDepartments = _context.Department.Count(),
+                ActiveDepartments = _context.Departments.Count(),
                 ActiveEmployees = _context.Users.Count(),
-                //ActiveWorkstations = _context.Workstation.Count();
+                ActiveWorkstations = _context.Workstations.Count(),
                 ActiveEngineers = _context.Users.Where(u => u.UserRole == "QA" || u.UserRole == "MfgEngineer").Count(),
-                ActiveSupervisors= _context.Users.Where(u => u.UserRole == "Supervisor").Count(),
-                ActiveOperators= _context.Users.Where(u => u.UserRole == "Operator").Count(),
+                ActiveSupervisors = _context.Users.Where(u => u.UserRole == "Supervisor").Count(),
+                ActiveOperators = _context.Users.Where(u => u.UserRole == "Operator").Count(),
             };
 
             return View(flowIndexViewModel);
+        }
+
+        public IActionResult GetChartData()
+        {
+            var data = _context.Workstations
+                .GroupBy(w => w.Department.Name)
+                .Select(grp => new
+                {
+                    Department = grp.Key,
+                    Count = grp.Count()
+                })
+                .OrderBy(o => o.Department)
+                .ToList();
+                        
+            return Json(data);
         }
     }
 }

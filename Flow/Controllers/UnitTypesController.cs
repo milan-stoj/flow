@@ -24,7 +24,7 @@ namespace Flow.Controllers
         // GET: UnitTypes
         public async Task<IActionResult> Index()
         {
-            return View(await _context.UnitType.ToListAsync());
+            return View(await _context.UnitTypes.ToListAsync());
         }
 
         // GET: UnitTypes/Details/5
@@ -35,7 +35,7 @@ namespace Flow.Controllers
                 return NotFound();
             }
 
-            var unitType = await _context.UnitType
+            var unitType = await _context.UnitTypes
                 .FirstOrDefaultAsync(m => m.ID == id);
             if (unitType == null)
             {
@@ -75,7 +75,7 @@ namespace Flow.Controllers
                 return NotFound();
             }
 
-            var unitType = await _context.UnitType.FindAsync(id);
+            var unitType = await _context.UnitTypes.FindAsync(id);
             if (unitType == null)
             {
                 return NotFound();
@@ -126,7 +126,7 @@ namespace Flow.Controllers
                 return NotFound();
             }
 
-            var unitType = await _context.UnitType
+            var unitType = await _context.UnitTypes
                 .FirstOrDefaultAsync(m => m.ID == id);
             if (unitType == null)
             {
@@ -141,15 +141,15 @@ namespace Flow.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var unitType = await _context.UnitType.FindAsync(id);
-            _context.UnitType.Remove(unitType);
+            var unitType = await _context.UnitTypes.FindAsync(id);
+            _context.UnitTypes.Remove(unitType);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool UnitTypeExists(int id)
         {
-            return _context.UnitType.Any(e => e.ID == id);
+            return _context.UnitTypes.Any(e => e.ID == id);
         }
     }
 }

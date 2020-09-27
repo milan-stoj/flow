@@ -53,7 +53,7 @@ namespace Flow.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Department",
+                name: "Departments",
                 columns: table => new
                 {
                     ID = table.Column<int>(nullable: false)
@@ -64,11 +64,11 @@ namespace Flow.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Department", x => x.ID);
+                    table.PrimaryKey("PK_Departments", x => x.ID);
                 });
 
             migrationBuilder.CreateTable(
-                name: "UnitType",
+                name: "UnitTypes",
                 columns: table => new
                 {
                     ID = table.Column<int>(nullable: false)
@@ -80,7 +80,7 @@ namespace Flow.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_UnitType", x => x.ID);
+                    table.PrimaryKey("PK_UnitTypes", x => x.ID);
                 });
 
             migrationBuilder.CreateTable(
@@ -205,9 +205,9 @@ namespace Flow.Migrations
                 {
                     table.PrimaryKey("PK_Workstations", x => x.ID);
                     table.ForeignKey(
-                        name: "FK_Workstations_Department_DepartmentID",
+                        name: "FK_Workstations_Departments_DepartmentID",
                         column: x => x.DepartmentID,
-                        principalTable: "Department",
+                        principalTable: "Departments",
                         principalColumn: "ID",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -225,9 +225,9 @@ namespace Flow.Migrations
                 {
                     table.PrimaryKey("PK_Units", x => x.ID);
                     table.ForeignKey(
-                        name: "FK_Units_UnitType_UnitTypeID",
+                        name: "FK_Units_UnitTypes_UnitTypeID",
                         column: x => x.UnitTypeID,
-                        principalTable: "UnitType",
+                        principalTable: "UnitTypes",
                         principalColumn: "ID",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -272,17 +272,17 @@ namespace Flow.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "a18be9c0-aa65-4af8-bd17-00bd9344e575", "26346825-08f2-4220-9503-ced57718e34e", "Administrator", "ADMINISTRATOR" },
-                    { "38b494f6-48d2-4899-8fa7-56860c0a3d4c", "359b75cd-53c3-4a0f-8680-d4f0f840de2f", "Supervisor", "SUPERVISOR" },
-                    { "79018cd0-1d10-4a1d-a90c-5577a9c95cce", "38374fdf-bd70-4c8e-be70-3480a15eafbb", "QA", "QA" },
-                    { "7392f373-86c2-41a7-91ba-68c4c10bdeba", "9b612d00-e188-4b92-a080-c9e0702bd8ec", "MfgEngineer", "MFGENGINEER" },
-                    { "b1ad27f3-3332-442e-8c7b-9f38a635e303", "cfed5fe6-304a-4991-8318-0f7b87451ffb", "Operator", "OPERATOR" }
+                    { "a18be9c0-aa65-4af8-bd17-00bd9344e575", "1addf518-4ae3-43c7-b9a1-8be2c0e39c4d", "Administrator", "ADMINISTRATOR" },
+                    { "dd49c3e1-6e94-474d-ab46-ce84d0265caf", "6d82a68b-861a-457a-9b60-a0fb753d25fe", "Supervisor", "SUPERVISOR" },
+                    { "b28d3ba5-ff0d-4c7b-9c9a-67a7ed6e06db", "8ed621c2-3b96-44b4-940d-c0699b754233", "QA", "QA" },
+                    { "2c4c6bfd-5fb5-4223-ada0-cbbabd6edc07", "c674c38e-da3b-4534-b7f2-a5ce85602a74", "MfgEngineer", "MFGENGINEER" },
+                    { "96ac3d59-0a35-4e35-b61d-3bbac2c069b5", "d878bdbd-5318-4ad7-8f9e-a83c59f51691", "Operator", "OPERATOR" }
                 });
 
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "FirstName", "LastName", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TotalRate", "TotalTime", "TwoFactorEnabled", "UnitsCompleted", "UserName", "UserRole" },
-                values: new object[] { "a18be9c0-aa65-4af8-bd17-00bd9344e575", 0, "8542ba6a-4712-4a2e-b0d7-df4549c3f713", "admin@company.com", true, null, null, false, null, "admin@company.com", "ADMIN@COMPANY.COM", "AQAAAAEAACcQAAAAEMeAin6TChHcMUl7NqSrLtNvCxK/ih/DMBlA0thAy6MWsmlIgRk1gvyFPqPOVgNiLA==", null, false, "", 0.0, 0.0, false, 0, "admin@company.com", "Administrator" });
+                values: new object[] { "a18be9c0-aa65-4af8-bd17-00bd9344e575", 0, "65ea3161-d043-4c6f-82ac-cffc9792efad", "admin@company.com", true, null, null, false, null, "admin@company.com", "ADMIN@COMPANY.COM", "AQAAAAEAACcQAAAAEMeAin6TChHcMUl7NqSrLtNvCxK/ih/DMBlA0thAy6MWsmlIgRk1gvyFPqPOVgNiLA==", null, false, "", 0.0, 0.0, false, 0, "admin@company.com", "Administrator" });
 
             migrationBuilder.InsertData(
                 table: "AspNetUserRoles",
@@ -387,10 +387,10 @@ namespace Flow.Migrations
                 name: "Units");
 
             migrationBuilder.DropTable(
-                name: "Department");
+                name: "Departments");
 
             migrationBuilder.DropTable(
-                name: "UnitType");
+                name: "UnitTypes");
         }
     }
 }

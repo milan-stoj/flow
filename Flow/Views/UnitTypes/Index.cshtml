@@ -28,12 +28,16 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Prefix)
+                <div>
+                    <h5>@Html.DisplayFor(modelItem => item.Prefix)</h5>
+                </div>
+                <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=@Html.Raw(item.Prefix)" />
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Description)
             </td>
             <td>
+                @Html.Raw(item.WorkInstructions.Replace(Environment.NewLine, "<br/>"))
                 @Html.DisplayFor(modelItem => item.WorkInstructions)
             </td>
             <td>

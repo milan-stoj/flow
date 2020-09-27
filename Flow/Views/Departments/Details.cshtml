@@ -40,10 +40,13 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Workstations.FirstOrDefault().Online)
+                @Html.DisplayNameFor(model => model.Workstations.FirstOrDefault().ID)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Workstations.FirstOrDefault().Department)
+                @Html.DisplayNameFor(model => model.Workstations.FirstOrDefault().Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Workstations.FirstOrDefault().Online)
             </th>
             <th></th>
         </tr>
@@ -53,15 +56,18 @@
         {
             <tr>
                 <td>
+                    @Html.DisplayFor(modelItem => item.ID)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
                     @Html.DisplayFor(modelItem => item.Online)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Department.ID)
-                </td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.ID">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.ID">Delete</a>
+                    <a asp-controller="Workstations" asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
+                    <a asp-controller="Workstations" asp-action="Details" asp-route-id="@item.ID">Details</a> |
+                    <a asp-controller="Workstations" asp-action="Delete" asp-route-id="@item.ID">Delete</a>
                 </td>
             </tr>
         }
