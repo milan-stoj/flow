@@ -27,6 +27,7 @@ namespace Flow.Controllers
                 ActiveEngineers = _context.Users.Where(u => u.UserRole == "QA" || u.UserRole == "MfgEngineer").Count(),
                 ActiveSupervisors = _context.Users.Where(u => u.UserRole == "Supervisor").Count(),
                 ActiveOperators = _context.Users.Where(u => u.UserRole == "Operator").Count(),
+                UnitTypes = _context.UnitTypes.Count()
             };
 
             return View(flowIndexViewModel);
@@ -41,10 +42,15 @@ namespace Flow.Controllers
                     Department = grp.Key,
                     Count = grp.Count()
                 })
-                .OrderBy(o => o.Department)
+                .OrderBy(o => o.Count)
                 .ToList();
                         
             return Json(data);
         }
+
+        //public IActionResult GetCompletionData()
+        //{
+
+        //}
     }
 }

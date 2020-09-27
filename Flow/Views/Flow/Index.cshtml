@@ -4,25 +4,35 @@
     ViewData["Title"] = "Index";
 }
 
+<script src="https://www.gstatic.com/charts/loader.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script src="~/js/charts.js"></script>
+
 <h1 class="display-4">Flow Insights</h1>
 <div class="d-flex bd-highlight">
-    <div class="p-2 flex-fill bd-highlight">
+    <div class="p-2">
         <div class="dash-card bg-c-dark order-dash-card">
             <div class="dash-card-block">
-                <a asp-controller="Departments" style="color: white;">
-                <h6 class="m-b-20">Active Departments</h6>
+                <a class="btn btn-block btn-outline-secondary" asp-controller="Departments" style="color: white;">
+                    Active Departments
                 </a>
-                <h2 class="text-right"><i class="fa fa-industry f-left"></i><span>@Model.ActiveDepartments</span></h2>
-                <h6 class="m-b-20">Active Workstations</h6>
-                <h2 class="text-right"><i class="fa fa-desktop f-left"></i><span>@Model.ActiveWorkstations</span></h2>
+                <h2 class="text-right pt-2"><i class="fa fa-industry f-left"></i><span>@Model.ActiveDepartments</span></h2>
+                <a class="btn btn-small btn-block btn-outline-secondary" asp-controller="Workstations" style="color: white;">
+                    Active Workstations
+                </a>
+                <h2 class="text-right pt-2"><i class="fa fa-desktop f-left"></i><span>@Model.ActiveWorkstations</span></h2>
             </div>
-        </div> 
+                <div class="pl-3" id="barchart-div" style="width: 400px">
+                </div>
+        </div>
     </div>
     <div class="p-2 flex-fill bd-highlight">
         <div class="dash-card bg-c-dark order-dash-card">
             <div class="dash-card-block">
-                <h6 class="m-b-20">Active Employees</h6>
-                <h2 class="text-right"><i class="fa fa-users f-left"></i><span>@Model.ActiveEmployees</span></h2>
+                <a class="btn btn-small btn-outline-secondary btn-block" asp-controller="Employees" style="color: white;">
+                    Active Employees
+                </a>
+                <h2 class="text-right pt-2"><i class="fa fa-users f-left"></i><span>@Model.ActiveEmployees</span></h2>
                 <h6 class="m-b-20">Supervisors</h6>
                 <h2 class="text-right"><i class="fa fa-user-edit f-left"></i><span>@Model.ActiveSupervisors</span></h2>
                 <h6 class="m-b-20">Engineers</h6>
@@ -30,24 +40,25 @@
                 <h6 class="m-b-20">Operators</h6>
                 <h2 class="text-right"><i class="fa fa-chalkboard-teacher f-left"></i><span>@Model.ActiveOperators</span></h2>
             </div>
-        </div> 
+        </div>
     </div>
     <div class="p-2 flex-fill bd-highlight">
         <div class="dash-card bg-c-dark order-dash-card">
             <div class="dash-card-block">
-                <h6 class="m-b-20">Units Completed</h6>
-                <h2 class="text-right"><i class="fa fa-cart-plus f-left"></i><span>@Model.ActiveEmployees</span></h2>
+                <a class="btn btn-small btn-outline-secondary btn-block" asp-controller="UnitTypes" style="color: white;">
+                    Unit Types
+                </a>
+                <h2 class="text-right pt-2"><i class="fa fa-cart-plus f-left"></i><span>@Model.UnitTypes</span></h2>
                 <p class="m-b-0"><span class="f-right">351</span></p>
             </div>
-        </div> 
+        </div>
     </div>
 </div>
 
-<div class="d-flex">
-    <div class="p-2 flex-grow-1">
+<div class="d-flex bd-highlight">
+    <div class="p-2 flex-grow-3">
         <div class="dash-card bg-c-dark">
-            <div class="dash-card-block">
-                <div id="line" style="height: 100%" ; width: 100%;"></div>
+            <div class="dash-card-block p-0">
             </div>
         </div>
     </div>
@@ -58,17 +69,34 @@
             </div>
         </div>
     </div>
+
     <div class="p-2 flex-grow-3">
+        <div class="dash-card bg-c-dark">
+            <div class="dash-card-block">
+                <div id="piechart-div">
+
+                </div>
             </div>
+        </div>
+    </div>
+
+    <div class="p-2 flex-grow-3">
+        <div class="dash-card bg-c-dark">
+            <div class="dash-card-block">
+            </div>
+        </div>
+    </div>
+    <div class="p-2 flex-grow-3">
+    </div>
 </div>
+
 
 
 <head>
     <!--Load the AJAX API-->
-    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script type="text/javascript">
-        google.charts.load('current', { 'packages': ['gauge'] });
-        google.charts.setOnLoadCallback(drawChart);
+        //google.charts.load('current', { 'packages': ['gauge'] });
+        //google.charts.setOnLoadCallback(drawChart);
 
         function drawChart() {
 
@@ -97,8 +125,8 @@
     </script>
     <script type="text/javascript">
 
-        google.charts.load('current', { packages: ['corechart', 'line'] });
-        google.charts.setOnLoadCallback(drawCurveTypes);
+        //google.charts.load('current', { packages: ['corechart', 'line'] });
+        //google.charts.setOnLoadCallback(drawCurveTypes);
 
         function drawCurveTypes() {
             var data = new google.visualization.DataTable();
@@ -127,13 +155,13 @@
                     title: 'Time',
                 },
                 vAxis: {
-                    textStyle: {color: '#FFF'},
+                    textStyle: { color: '#FFF' },
                     title: 'Popularity'
                 },
                 series: {
                     1: { curveType: 'function' }
                 },
-                backgroundColor : 'transparent'
+                backgroundColor: 'transparent'
             };
 
             var chart = new google.visualization.LineChart(document.getElementById('line'));

@@ -14,5 +14,6 @@ namespace Flow.ViewModels
         public int ActiveOperators { get; set; }
         public int ActiveDepartments { get; set; }
         public int ActiveWorkstations { get; set; }
+        public int UnitTypes { get; set; }
     }
 }
