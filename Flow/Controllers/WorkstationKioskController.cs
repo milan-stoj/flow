@@ -57,12 +57,14 @@ namespace Flow.Controllers
 
         public async Task<IActionResult> CreateLog(WorkstationKioskViewModel model, string logEvent)
         {
-            UnitLog unitLog = new UnitLog();
-            unitLog.ApplicationUser = model.ApplicationUser;
-            unitLog.Unit = model.Workstation.CurrentUnit;
-            unitLog.Workstation = model.Workstation;
-            unitLog.EventDate = DateTime.Now;
-            unitLog.Event = logEvent;
+            UnitLog unitLog = new UnitLog
+            {
+                ApplicationUser = model.ApplicationUser,
+                Unit = model.Workstation.CurrentUnit,
+                Workstation = model.Workstation,
+                EventDate = DateTime.Now,
+                Event = logEvent
+            };
             await _context.AddAsync(unitLog);
             await _context.SaveChangesAsync();
             return RedirectToAction("Index");
@@ -76,7 +78,11 @@ namespace Flow.Controllers
                 var applicationDbContext = _context.Workstations.Include(w => w.Department);
                 return View(await applicationDbContext.ToListAsync());
             }
-            _context.Workstations.FirstOrDefaultAsync(w => w.ID == id).Result.CurrentUser = _applicationUserRepository.GetApplicationUser(User.FindFirstValue(ClaimTypes.NameIdentifier));
+
+            var workstation = _context.Workstations.FirstOrDefaultAsync(w => w.ID == id).Result;
+            workstation.Online = true;
+            workstation.CurrentUser = _applicationUserRepository.GetApplicationUser(User.FindFirstValue(ClaimTypes.NameIdentifier));
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
@@ -85,7 +91,8 @@ namespace Flow.Controllers
         {
             var entity = _context.Workstations.Include(w => w.CurrentUser).FirstOrDefaultAsync(w => w.ID == id).Result;
             entity.CurrentUser = null;
-            await _context.SaveChangesAsync();
+            entity.Online = false;
+            _context.SaveChanges();
             return RedirectToAction("Index", "Home");
         }
 
@@ -116,12 +123,31 @@ namespace Flow.Controllers
                 }
                 return View();
             }
-            _context.Workstations.Where(w => w.CurrentUser.Id == userId).FirstOrDefault().CurrentUnit = _context.Units
+
+            var workstation = _context.Workstations
+                .Include(w => w.CurrentUser)
+                .Include(w => w.CurrentUnit)
+                .FirstOrDefaultAsync(w => w.CurrentUser.Id == userId).Result;
+
+            var startedUnit = _context
+                .Units
                 .Include(u => u.UnitType)
-                .FirstOrDefaultAsync(u => u.UnitNumber == unit.UnitNumber)
-                .Result;
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                .Where(u => u.UnitNumber == unit.UnitNumber).FirstOrDefault();
+
+            var newLog = new UnitLog
+            {
+                ApplicationUser = workstation.CurrentUser,
+                Unit = startedUnit,
+                Workstation = workstation,
+                EventDate = DateTime.Now,
+                Event = "CHECKIN"
+            };
+
+            _context.Workstations.Where(w => w.CurrentUser.Id == userId).FirstOrDefault().CurrentUnit = startedUnit;
+
+            await _context.AddAsync(newLog);
+            _context.SaveChanges();
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: WorkstationKioskController/Edit/5
@@ -131,38 +157,49 @@ namespace Flow.Controllers
                 .Include(w => w.CurrentUser)
                 .Include(w => w.CurrentUnit)
                 .FirstOrDefaultAsync(w => w.ID == id).Result;
-            _context.Workstations.Update(entity);
 
-            var log = _context.UnitLogs.Where(l => l.UnitID == entity.CurrentUnit.ID).FirstOrDefaultAsync();
-            var newLog = new UnitLog();
-            newLog.ApplicationUser = entity.CurrentUser;
-            newLog.UnitID = entity.CurrentUnit.ID;
-            newLog.Workstation = entity;
-            newLog.EventDate = DateTime.Now;
-            newLog.Event = "CHECKOUT";
+            var newLog = new UnitLog
+            {
+                ApplicationUser = entity.CurrentUser,
+                Unit = entity.CurrentUnit,
+                Workstation = entity,
+                EventDate = DateTime.Now,
+                Event = "CHECKOUT"
+            };
 
             await _context.AddAsync(newLog);
 
             entity.CurrentUnit = null;
 
-            await _context.SaveChangesAsync();
+            _context.SaveChanges();
 
             return RedirectToAction("Index");
         }
 
         // POST: WorkstationKioskController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public async Task<IActionResult> HoldPart(int? id)
         {
-            try
+            var entity = _context.Workstations
+                .Include(w => w.CurrentUser)
+                .Include(w => w.CurrentUnit)
+                .FirstOrDefaultAsync(w => w.ID == id).Result;
+
+            var newLog = new UnitLog
             {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+                ApplicationUser = entity.CurrentUser,
+                Unit = entity.CurrentUnit,
+                Workstation = entity,
+                EventDate = DateTime.Now,
+                Event = "QA HOLD"
+            };
+
+            await _context.AddAsync(newLog);
+
+            entity.CurrentUnit.QA = true;
+
+            _context.SaveChanges();
+
+            return RedirectToAction("Index");
         }
 
         // GET: WorkstationKioskController/Delete/5

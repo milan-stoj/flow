@@ -6,20 +6,17 @@
 
 <h1 class="display-4">Workstations</h1>
 
-<table class="table table-striped">
+<table class="table table-striped table-dark table-sm">
     <thead>
         <tr>
+            <th>
+               Status
+            </th>
             <th>
                 Department - Workstation
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Online)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.QA)
             </th>
             <th></th>
         </tr>
@@ -28,16 +25,13 @@
 @foreach (var item in Model) {
         <tr>
             <td>
+                @await Component.InvokeAsync("Status", new { workstation = item })
+            </td>
+            <td>
                 @Html.DisplayFor(modelItem => item.Department.Name) @Html.DisplayFor(modelItem => item.DepartmentID)-@Html.DisplayFor(modelItem => item.Code)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Online)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.QA)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |

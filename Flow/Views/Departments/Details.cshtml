@@ -40,13 +40,13 @@
     <thead>
         <tr>
             <th>
+               Status
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.Workstations.FirstOrDefault().Code)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Workstations.FirstOrDefault().Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Workstations.FirstOrDefault().Online)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Workstations.FirstOrDefault().CurrentUnit)
@@ -62,13 +62,13 @@
         {
             <tr>
                 <td>
+                    @await Component.InvokeAsync("Status", new { workstation = item })
+                </td>
+                <td>
                     @Html.DisplayFor(modelItem => item.Code)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Name)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Online)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.CurrentUnit)

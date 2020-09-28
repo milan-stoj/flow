@@ -1,7 +1,7 @@
 ﻿@model Flow.ViewModels.WorkstationKioskViewModel
 <div class="row align-items-center py-3">
     <div class="col-sm d-flex text-center">
-        <a asp-action="HoldPart" class="btn btn-block btn-danger shadow ">Hold Tag (QA)</a>
+        <a asp-action="HoldPart" asp-route-id="@Model.Workstation.ID" class="btn btn-block btn-danger shadow ">Hold Tag (QA)</a>
     </div>
     <div class="col-sm">
         <a asp-action="Logout" asp-route-id="@Model.Workstation.ID" class="btn btn-block btn-warning shadow">Check-out of Workstation</a>
