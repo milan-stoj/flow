@@ -11,10 +11,14 @@ namespace Flow.Models.Logs
     {
         [Key]
         public int ID { get; set; }
-        public string Event { get; set;}
+        public string Event { get; set; }
         public DateTime EventDate { get; set; }
-        public int CompletionTime { get; set; }
-        public int Efficiency { get; set; }
+        public double CompletionTime { get; set; }
+        public double Efficiency { get; set; }
+        public double NonValueAddedTime { get; set; }
+        public double ValueAddedTime { get; set; }
+        
+        public double InventoryTime { get; set; }
 
         [ForeignKey("Workstation")]
         public int WorkstationID { get; set; }

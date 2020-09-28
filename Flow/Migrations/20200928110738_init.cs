@@ -255,8 +255,11 @@ namespace Flow.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Event = table.Column<string>(nullable: true),
                     EventDate = table.Column<DateTime>(nullable: false),
-                    CompletionTime = table.Column<int>(nullable: false),
-                    Efficiency = table.Column<int>(nullable: false),
+                    CompletionTime = table.Column<double>(nullable: false),
+                    Efficiency = table.Column<double>(nullable: false),
+                    NonValueAddedTime = table.Column<double>(nullable: false),
+                    ValueAddedTime = table.Column<double>(nullable: false),
+                    InventoryTime = table.Column<double>(nullable: false),
                     WorkstationID = table.Column<int>(nullable: false),
                     ApplicationUserID = table.Column<string>(nullable: true),
                     UnitID = table.Column<int>(nullable: false)
@@ -289,17 +292,17 @@ namespace Flow.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "a18be9c0-aa65-4af8-bd17-00bd9344e575", "dfdaa35a-57d9-4847-8bda-63abc188de0d", "Administrator", "ADMINISTRATOR" },
-                    { "f3ac7c01-f186-4414-b053-52788dffc459", "9404e779-4b29-440b-92e5-b07cf130baa1", "Supervisor", "SUPERVISOR" },
-                    { "9c56efd8-4105-4463-9996-b18fb799791b", "2c2a4d37-c1c8-4dd6-9a6d-1479d3b6f01b", "QA", "QA" },
-                    { "6b45ca85-6ecc-4d76-a0da-2e495dce5f84", "853842df-fd35-472f-9a1d-fb6d48646a08", "MfgEngineer", "MFGENGINEER" },
-                    { "0a01555c-664d-45ca-8638-04a4a532fb11", "6a6ffb9b-130d-4b09-8d3a-c4ef52cb17a0", "Operator", "OPERATOR" }
+                    { "a18be9c0-aa65-4af8-bd17-00bd9344e575", "466c43d6-fe90-419c-a1bf-3e3ae5ce9260", "Administrator", "ADMINISTRATOR" },
+                    { "146fe31d-ad2f-4b60-80f1-71b07627f463", "0b3b1936-da44-41d3-bb21-8b728fcba786", "Supervisor", "SUPERVISOR" },
+                    { "99a36797-7f9b-468e-8780-5838ee08978b", "9893252b-bfae-4578-94da-7168b68223e0", "QA", "QA" },
+                    { "cc4730f1-0aa2-4e8a-9be9-7372ca389c63", "171f50d7-6c42-4d87-9016-8449f50bf0d8", "MfgEngineer", "MFGENGINEER" },
+                    { "3b8718fe-5497-4d48-abd0-82bc33754b67", "bee069af-4dfd-4ea0-bf95-21757ce8c3ce", "Operator", "OPERATOR" }
                 });
 
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "FirstName", "LastName", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TotalRate", "TotalTime", "TwoFactorEnabled", "UnitsCompleted", "UserName", "UserRole" },
-                values: new object[] { "a18be9c0-aa65-4af8-bd17-00bd9344e575", 0, "4f553127-42cc-4821-b77e-44ea1017f23b", "admin@company.com", true, null, null, false, null, "admin@company.com", "ADMIN@COMPANY.COM", "AQAAAAEAACcQAAAAEMeAin6TChHcMUl7NqSrLtNvCxK/ih/DMBlA0thAy6MWsmlIgRk1gvyFPqPOVgNiLA==", null, false, "", 0.0, 0.0, false, 0, "admin@company.com", "Administrator" });
+                values: new object[] { "a18be9c0-aa65-4af8-bd17-00bd9344e575", 0, "7ed98fc7-17d0-42d6-8449-efc2563a36b2", "admin@company.com", true, null, null, false, null, "admin@company.com", "ADMIN@COMPANY.COM", "AQAAAAEAACcQAAAAEMeAin6TChHcMUl7NqSrLtNvCxK/ih/DMBlA0thAy6MWsmlIgRk1gvyFPqPOVgNiLA==", null, false, "", 0.0, 0.0, false, 0, "admin@company.com", "Administrator" });
 
             migrationBuilder.InsertData(
                 table: "AspNetUserRoles",

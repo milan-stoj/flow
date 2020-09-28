@@ -22,7 +22,9 @@ namespace Flow.Controllers
         // GET: Workstations
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Workstations.Include(w => w.Department);
+            var applicationDbContext = _context.Workstations
+                .Include(w => w.Department)
+                .Include(w => w.CurrentUnit);
             return View(await applicationDbContext.ToListAsync());
         }
 

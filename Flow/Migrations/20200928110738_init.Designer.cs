@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Flow.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20200928045950_init")]
+    [Migration("20200928110738_init")]
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -108,7 +108,7 @@ namespace Flow.Migrations
                         {
                             Id = "a18be9c0-aa65-4af8-bd17-00bd9344e575",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "4f553127-42cc-4821-b77e-44ea1017f23b",
+                            ConcurrencyStamp = "7ed98fc7-17d0-42d6-8449-efc2563a36b2",
                             Email = "admin@company.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
@@ -157,11 +157,11 @@ namespace Flow.Migrations
                     b.Property<string>("ApplicationUserID")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("CompletionTime")
-                        .HasColumnType("int");
+                    b.Property<double>("CompletionTime")
+                        .HasColumnType("float");
 
-                    b.Property<int>("Efficiency")
-                        .HasColumnType("int");
+                    b.Property<double>("Efficiency")
+                        .HasColumnType("float");
 
                     b.Property<string>("Event")
                         .HasColumnType("nvarchar(max)");
@@ -169,8 +169,17 @@ namespace Flow.Migrations
                     b.Property<DateTime>("EventDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<double>("InventoryTime")
+                        .HasColumnType("float");
+
+                    b.Property<double>("NonValueAddedTime")
+                        .HasColumnType("float");
+
                     b.Property<int>("UnitID")
                         .HasColumnType("int");
+
+                    b.Property<double>("ValueAddedTime")
+                        .HasColumnType("float");
 
                     b.Property<int>("WorkstationID")
                         .HasColumnType("int");
@@ -302,35 +311,35 @@ namespace Flow.Migrations
                         new
                         {
                             Id = "a18be9c0-aa65-4af8-bd17-00bd9344e575",
-                            ConcurrencyStamp = "dfdaa35a-57d9-4847-8bda-63abc188de0d",
+                            ConcurrencyStamp = "466c43d6-fe90-419c-a1bf-3e3ae5ce9260",
                             Name = "Administrator",
                             NormalizedName = "ADMINISTRATOR"
                         },
                         new
                         {
-                            Id = "f3ac7c01-f186-4414-b053-52788dffc459",
-                            ConcurrencyStamp = "9404e779-4b29-440b-92e5-b07cf130baa1",
+                            Id = "146fe31d-ad2f-4b60-80f1-71b07627f463",
+                            ConcurrencyStamp = "0b3b1936-da44-41d3-bb21-8b728fcba786",
                             Name = "Supervisor",
                             NormalizedName = "SUPERVISOR"
                         },
                         new
                         {
-                            Id = "9c56efd8-4105-4463-9996-b18fb799791b",
-                            ConcurrencyStamp = "2c2a4d37-c1c8-4dd6-9a6d-1479d3b6f01b",
+                            Id = "99a36797-7f9b-468e-8780-5838ee08978b",
+                            ConcurrencyStamp = "9893252b-bfae-4578-94da-7168b68223e0",
                             Name = "QA",
                             NormalizedName = "QA"
                         },
                         new
                         {
-                            Id = "6b45ca85-6ecc-4d76-a0da-2e495dce5f84",
-                            ConcurrencyStamp = "853842df-fd35-472f-9a1d-fb6d48646a08",
+                            Id = "cc4730f1-0aa2-4e8a-9be9-7372ca389c63",
+                            ConcurrencyStamp = "171f50d7-6c42-4d87-9016-8449f50bf0d8",
                             Name = "MfgEngineer",
                             NormalizedName = "MFGENGINEER"
                         },
                         new
                         {
-                            Id = "0a01555c-664d-45ca-8638-04a4a532fb11",
-                            ConcurrencyStamp = "6a6ffb9b-130d-4b09-8d3a-c4ef52cb17a0",
+                            Id = "3b8718fe-5497-4d48-abd0-82bc33754b67",
+                            ConcurrencyStamp = "bee069af-4dfd-4ea0-bf95-21757ce8c3ce",
                             Name = "Operator",
                             NormalizedName = "OPERATOR"
                         });

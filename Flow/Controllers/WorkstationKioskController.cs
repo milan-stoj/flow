@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -43,12 +44,12 @@ namespace Flow.Controllers
                     ApplicationUser = _applicationUserRepository.GetApplicationUser(User.FindFirstValue(ClaimTypes.NameIdentifier)),
                     Department = _context.Workstations.Where(w => w.CurrentUser.Id == userId).Select(w => w.Department).FirstOrDefault(),
                     Workstation = _context.Workstations.Where(w => w.CurrentUser.Id == userId).Include(w => w.CurrentUnit).Include(w => w.CurrentUnit.UnitType).FirstOrDefault(),
-                    UnitLog = _context.UnitLogs.Where(w => w.Unit == _context.Workstations.Where(w => w.CurrentUser.Id == userId).FirstOrDefault().CurrentUnit).ToList()
+                    UnitLog = _context.UnitLogs.Include(u => u.Workstation).Where(w => w.Unit == _context.Workstations.Where(w => w.CurrentUser.Id == userId).FirstOrDefault().CurrentUnit).OrderBy(u => u.EventDate).ToList()
                 };
 
                 if (workstationKioskViewModel.UnitLog.Count == 0 && workstationKioskViewModel.Workstation.CurrentUnit != null)
                 {
-                    await CreateLog(workstationKioskViewModel, "INIT");
+                    await CreateLog(workstationKioskViewModel, "CHECKIN");
                     workstationKioskViewModel.UnitLog = _context.UnitLogs.Where(w => w.Unit == _context.Workstations.Where(w => w.CurrentUser.Id == userId).FirstOrDefault().CurrentUnit).ToList();
                 }
                 return View(workstationKioskViewModel);
@@ -90,6 +91,7 @@ namespace Flow.Controllers
         public async Task<IActionResult> Logout(int? id)
         {
             var entity = _context.Workstations.Include(w => w.CurrentUser).FirstOrDefaultAsync(w => w.ID == id).Result;
+            CheckOutPart(id).Wait();
             entity.CurrentUser = null;
             entity.Online = false;
             _context.SaveChanges();
@@ -134,12 +136,17 @@ namespace Flow.Controllers
                 .Include(u => u.UnitType)
                 .Where(u => u.UnitNumber == unit.UnitNumber).FirstOrDefault();
 
+
+            DateTime workStart = _context.UnitLogs.Where(u => u.Unit == startedUnit).OrderByDescending(u => u.EventDate).First(u => u.Event == "CHECKOUT").EventDate;
+            double nonValueAdd = TimeDifference(workStart);
+
             var newLog = new UnitLog
             {
                 ApplicationUser = workstation.CurrentUser,
                 Unit = startedUnit,
                 Workstation = workstation,
                 EventDate = DateTime.Now,
+                InventoryTime = nonValueAdd,
                 Event = "CHECKIN"
             };
 
@@ -158,12 +165,16 @@ namespace Flow.Controllers
                 .Include(w => w.CurrentUnit)
                 .FirstOrDefaultAsync(w => w.ID == id).Result;
 
+            DateTime workStart = _context.UnitLogs.Where(u => u.Unit == entity.CurrentUnit).OrderByDescending(u => u.EventDate).First(u => u.Event == "CHECKIN").EventDate;
+            double valueAdd = TimeDifference(workStart);
+
             var newLog = new UnitLog
             {
                 ApplicationUser = entity.CurrentUser,
                 Unit = entity.CurrentUnit,
                 Workstation = entity,
                 EventDate = DateTime.Now,
+                ValueAddedTime = valueAdd,
                 Event = "CHECKOUT"
             };
 
@@ -184,12 +195,16 @@ namespace Flow.Controllers
                 .Include(w => w.CurrentUnit)
                 .FirstOrDefaultAsync(w => w.ID == id).Result;
 
+            DateTime workStart = _context.UnitLogs.Where(u => u.Unit == entity.CurrentUnit).OrderByDescending(u => u.EventDate).First(u => u.Event == "CHECKIN").EventDate;
+            double valueAdd = TimeDifference(workStart);
+            
             var newLog = new UnitLog
             {
                 ApplicationUser = entity.CurrentUser,
                 Unit = entity.CurrentUnit,
                 Workstation = entity,
                 EventDate = DateTime.Now,
+                ValueAddedTime = valueAdd,
                 Event = "QA HOLD"
             };
 
@@ -202,10 +217,74 @@ namespace Flow.Controllers
             return RedirectToAction("Index");
         }
 
-        // GET: WorkstationKioskController/Delete/5
-        public ActionResult Delete(int id)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> RemoveHold(WorkstationKioskViewModel model)
         {
-            return View();
+            var userTry = _context.Users.Where(u => u.Email == model.ApplicationUser.Email).FirstOrDefault();
+
+            if(userTry.UserRole == "QA" && userTry != null)
+            {
+                var entity = _context.Workstations
+                    .Include(w => w.CurrentUser)
+                    .Include(w => w.CurrentUnit)
+                    .FirstOrDefaultAsync(w => w.ID == model.Workstation.ID).Result;
+
+                DateTime holdStart = _context.UnitLogs.Where(u => u.Unit == entity.CurrentUnit).OrderByDescending(u => u.EventDate).First(u => u.Event == "QA HOLD").EventDate;
+                double nonValueAdd = TimeDifference(holdStart);
+                    
+                var newLog = new UnitLog
+                {
+                    ApplicationUser = entity.CurrentUser,
+                    Unit = entity.CurrentUnit,
+                    Workstation = entity,
+                    EventDate = DateTime.Now,
+                    NonValueAddedTime = nonValueAdd,
+                    Event = "GREEN TAG"
+                };
+                await _context.AddAsync(newLog);
+                entity.CurrentUnit.QA = false;
+                _context.SaveChanges();
+                return RedirectToAction("Index");
+            }
+            return RedirectToAction("Index");
+        }
+        public async Task<IActionResult> CompletePart(WorkstationKioskViewModel model)
+        {
+            var userTry = _context.Users.Where(u => u.Email == model.ApplicationUser.Email).FirstOrDefault();
+
+            if(userTry.UserRole == "QA" && userTry != null)
+            {
+                var entity = _context.Workstations
+                    .Include(w => w.CurrentUser)
+                    .Include(w => w.CurrentUnit)
+                    .FirstOrDefaultAsync(w => w.ID == model.Workstation.ID).Result;
+
+                DateTime holdStart = _context.UnitLogs.Where(u => u.Unit == entity.CurrentUnit).OrderByDescending(u => u.EventDate).First(u => u.Event == "QA HOLD").EventDate;
+                double nonValueAdd = TimeDifference(holdStart);
+                    
+                var newLog = new UnitLog
+                {
+                    ApplicationUser = entity.CurrentUser,
+                    Unit = entity.CurrentUnit,
+                    Workstation = entity,
+                    EventDate = DateTime.Now,
+                    NonValueAddedTime = nonValueAdd,
+                    Event = "GREEN TAG"
+                };
+                await _context.AddAsync(newLog);
+                entity.CurrentUnit.QA = false;
+                _context.SaveChanges();
+                return RedirectToAction("Index");
+            }
+            return RedirectToAction("Index");
+        }
+
+        // GET: WorkstationKioskController/Delete/5
+        public double TimeDifference(DateTime start)
+        {
+            TimeSpan ts = DateTime.Now - start;
+            return (double)ts.TotalMinutes;
         }
 
         // POST: WorkstationKioskController/Delete/5
