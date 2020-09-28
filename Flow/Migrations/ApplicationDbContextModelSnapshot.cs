@@ -106,7 +106,7 @@ namespace Flow.Migrations
                         {
                             Id = "a18be9c0-aa65-4af8-bd17-00bd9344e575",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "14be05e3-dd73-462d-b2b4-fa018ebb16f9",
+                            ConcurrencyStamp = "4f553127-42cc-4821-b77e-44ea1017f23b",
                             Email = "admin@company.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
@@ -155,25 +155,31 @@ namespace Flow.Migrations
                     b.Property<string>("ApplicationUserID")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<DateTime>("Finish")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("MyProperty")
+                    b.Property<int>("CompletionTime")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("Start")
+                    b.Property<int>("Efficiency")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Event")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("EventDate")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("UnitID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("WorkstationID")
                         .HasColumnType("int");
 
                     b.HasKey("ID");
 
                     b.HasIndex("ApplicationUserID");
 
-                    b.HasIndex("MyProperty");
-
                     b.HasIndex("UnitID");
+
+                    b.HasIndex("WorkstationID");
 
                     b.ToTable("UnitLogs");
                 });
@@ -184,6 +190,9 @@ namespace Flow.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<bool>("QA")
+                        .HasColumnType("bit");
 
                     b.Property<string>("UnitNumber")
                         .HasColumnType("nvarchar(max)");
@@ -291,35 +300,35 @@ namespace Flow.Migrations
                         new
                         {
                             Id = "a18be9c0-aa65-4af8-bd17-00bd9344e575",
-                            ConcurrencyStamp = "24ba57a6-3393-40af-a532-0d9cdf93f843",
+                            ConcurrencyStamp = "dfdaa35a-57d9-4847-8bda-63abc188de0d",
                             Name = "Administrator",
                             NormalizedName = "ADMINISTRATOR"
                         },
                         new
                         {
-                            Id = "67e2d28b-54ed-4575-9461-16bd608e3046",
-                            ConcurrencyStamp = "25f24c4e-0750-48ec-9df6-2edc14607608",
+                            Id = "f3ac7c01-f186-4414-b053-52788dffc459",
+                            ConcurrencyStamp = "9404e779-4b29-440b-92e5-b07cf130baa1",
                             Name = "Supervisor",
                             NormalizedName = "SUPERVISOR"
                         },
                         new
                         {
-                            Id = "d67f015b-59d9-4f3a-aac7-eff05e57a1ed",
-                            ConcurrencyStamp = "7b1b5c27-1533-48d7-9ad6-0a8ef2d35000",
+                            Id = "9c56efd8-4105-4463-9996-b18fb799791b",
+                            ConcurrencyStamp = "2c2a4d37-c1c8-4dd6-9a6d-1479d3b6f01b",
                             Name = "QA",
                             NormalizedName = "QA"
                         },
                         new
                         {
-                            Id = "8f49dc8d-a1bd-42a1-82e9-ff1eac534a89",
-                            ConcurrencyStamp = "ca45aaba-1f67-40ea-8972-a2b5e1a1792d",
+                            Id = "6b45ca85-6ecc-4d76-a0da-2e495dce5f84",
+                            ConcurrencyStamp = "853842df-fd35-472f-9a1d-fb6d48646a08",
                             Name = "MfgEngineer",
                             NormalizedName = "MFGENGINEER"
                         },
                         new
                         {
-                            Id = "f1f4475f-755d-4676-9783-b5ba38165ee3",
-                            ConcurrencyStamp = "4e0d4913-cf47-41ab-83be-01b6f14fbf0a",
+                            Id = "0a01555c-664d-45ca-8638-04a4a532fb11",
+                            ConcurrencyStamp = "6a6ffb9b-130d-4b09-8d3a-c4ef52cb17a0",
                             Name = "Operator",
                             NormalizedName = "OPERATOR"
                         });
@@ -446,15 +455,15 @@ namespace Flow.Migrations
                         .WithMany()
                         .HasForeignKey("ApplicationUserID");
 
-                    b.HasOne("Flow.Models.Workstation", "Workstation")
-                        .WithMany()
-                        .HasForeignKey("MyProperty")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("Flow.Models.Unit", "Unit")
                         .WithMany()
                         .HasForeignKey("UnitID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Flow.Models.Workstation", "Workstation")
+                        .WithMany()
+                        .HasForeignKey("WorkstationID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

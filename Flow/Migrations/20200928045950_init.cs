@@ -196,6 +196,7 @@ namespace Flow.Migrations
                     ID = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     UnitNumber = table.Column<string>(nullable: true),
+                    QA = table.Column<bool>(nullable: false),
                     UnitTypeID = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
@@ -252,9 +253,11 @@ namespace Flow.Migrations
                 {
                     ID = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Start = table.Column<DateTime>(nullable: false),
-                    Finish = table.Column<DateTime>(nullable: false),
-                    MyProperty = table.Column<int>(nullable: false),
+                    Event = table.Column<string>(nullable: true),
+                    EventDate = table.Column<DateTime>(nullable: false),
+                    CompletionTime = table.Column<int>(nullable: false),
+                    Efficiency = table.Column<int>(nullable: false),
+                    WorkstationID = table.Column<int>(nullable: false),
                     ApplicationUserID = table.Column<string>(nullable: true),
                     UnitID = table.Column<int>(nullable: false)
                 },
@@ -268,15 +271,15 @@ namespace Flow.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_UnitLogs_Workstations_MyProperty",
-                        column: x => x.MyProperty,
-                        principalTable: "Workstations",
-                        principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
                         name: "FK_UnitLogs_Units_UnitID",
                         column: x => x.UnitID,
                         principalTable: "Units",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_UnitLogs_Workstations_WorkstationID",
+                        column: x => x.WorkstationID,
+                        principalTable: "Workstations",
                         principalColumn: "ID",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -286,17 +289,17 @@ namespace Flow.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "a18be9c0-aa65-4af8-bd17-00bd9344e575", "24ba57a6-3393-40af-a532-0d9cdf93f843", "Administrator", "ADMINISTRATOR" },
-                    { "67e2d28b-54ed-4575-9461-16bd608e3046", "25f24c4e-0750-48ec-9df6-2edc14607608", "Supervisor", "SUPERVISOR" },
-                    { "d67f015b-59d9-4f3a-aac7-eff05e57a1ed", "7b1b5c27-1533-48d7-9ad6-0a8ef2d35000", "QA", "QA" },
-                    { "8f49dc8d-a1bd-42a1-82e9-ff1eac534a89", "ca45aaba-1f67-40ea-8972-a2b5e1a1792d", "MfgEngineer", "MFGENGINEER" },
-                    { "f1f4475f-755d-4676-9783-b5ba38165ee3", "4e0d4913-cf47-41ab-83be-01b6f14fbf0a", "Operator", "OPERATOR" }
+                    { "a18be9c0-aa65-4af8-bd17-00bd9344e575", "dfdaa35a-57d9-4847-8bda-63abc188de0d", "Administrator", "ADMINISTRATOR" },
+                    { "f3ac7c01-f186-4414-b053-52788dffc459", "9404e779-4b29-440b-92e5-b07cf130baa1", "Supervisor", "SUPERVISOR" },
+                    { "9c56efd8-4105-4463-9996-b18fb799791b", "2c2a4d37-c1c8-4dd6-9a6d-1479d3b6f01b", "QA", "QA" },
+                    { "6b45ca85-6ecc-4d76-a0da-2e495dce5f84", "853842df-fd35-472f-9a1d-fb6d48646a08", "MfgEngineer", "MFGENGINEER" },
+                    { "0a01555c-664d-45ca-8638-04a4a532fb11", "6a6ffb9b-130d-4b09-8d3a-c4ef52cb17a0", "Operator", "OPERATOR" }
                 });
 
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "FirstName", "LastName", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TotalRate", "TotalTime", "TwoFactorEnabled", "UnitsCompleted", "UserName", "UserRole" },
-                values: new object[] { "a18be9c0-aa65-4af8-bd17-00bd9344e575", 0, "14be05e3-dd73-462d-b2b4-fa018ebb16f9", "admin@company.com", true, null, null, false, null, "admin@company.com", "ADMIN@COMPANY.COM", "AQAAAAEAACcQAAAAEMeAin6TChHcMUl7NqSrLtNvCxK/ih/DMBlA0thAy6MWsmlIgRk1gvyFPqPOVgNiLA==", null, false, "", 0.0, 0.0, false, 0, "admin@company.com", "Administrator" });
+                values: new object[] { "a18be9c0-aa65-4af8-bd17-00bd9344e575", 0, "4f553127-42cc-4821-b77e-44ea1017f23b", "admin@company.com", true, null, null, false, null, "admin@company.com", "ADMIN@COMPANY.COM", "AQAAAAEAACcQAAAAEMeAin6TChHcMUl7NqSrLtNvCxK/ih/DMBlA0thAy6MWsmlIgRk1gvyFPqPOVgNiLA==", null, false, "", 0.0, 0.0, false, 0, "admin@company.com", "Administrator" });
 
             migrationBuilder.InsertData(
                 table: "AspNetUserRoles",
@@ -348,14 +351,14 @@ namespace Flow.Migrations
                 column: "ApplicationUserID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_UnitLogs_MyProperty",
-                table: "UnitLogs",
-                column: "MyProperty");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_UnitLogs_UnitID",
                 table: "UnitLogs",
                 column: "UnitID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UnitLogs_WorkstationID",
+                table: "UnitLogs",
+                column: "WorkstationID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Units_UnitTypeID",

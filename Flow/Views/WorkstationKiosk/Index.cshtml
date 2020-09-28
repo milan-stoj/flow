@@ -43,4 +43,18 @@
 </div>
 
 
+<div class="d-flex bd-highlight">
+    <div class="card">
+        <div class="card-body flex-column">
+            @await Component.InvokeAsync("WipDetails", new { workstation = Model.Workstation })
+        </div>
+    </div>
+    <div class="">
+        <div class="dash-card bg-c-dark order-dash-card">
+            <div class="dash-card-block">
+                <h2 class="text-right pt-2"><i class="fa fa-desktop f-left"></i><span> B</span></h2>
+            </div>
+        </div>
+    </div>
+</div>
 

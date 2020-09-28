@@ -5,6 +5,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Flow.Data;
 using Flow.Models;
+using Flow.Models.Logs;
 using Flow.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -41,10 +42,30 @@ namespace Flow.Controllers
                 {
                     ApplicationUser = _applicationUserRepository.GetApplicationUser(User.FindFirstValue(ClaimTypes.NameIdentifier)),
                     Department = _context.Workstations.Where(w => w.CurrentUser.Id == userId).Select(w => w.Department).FirstOrDefault(),
-                    Workstation = _context.Workstations.Where(w => w.CurrentUser.Id == userId).FirstOrDefault()
+                    Workstation = _context.Workstations.Where(w => w.CurrentUser.Id == userId).Include(w => w.CurrentUnit).Include(w => w.CurrentUnit.UnitType).FirstOrDefault(),
+                    UnitLog = _context.UnitLogs.Where(w => w.Unit == _context.Workstations.Where(w => w.CurrentUser.Id == userId).FirstOrDefault().CurrentUnit).ToList()
                 };
+
+                if (workstationKioskViewModel.UnitLog.Count == 0)
+                {
+                    await CreateLog(workstationKioskViewModel, "INIT");
+                }
+
                 return View(workstationKioskViewModel);
             }
+        }
+
+        public async Task<IActionResult> CreateLog(WorkstationKioskViewModel model, string logEvent)
+        {
+            UnitLog unitLog = new UnitLog();
+            unitLog.ApplicationUser = model.ApplicationUser;
+            unitLog.Unit = model.Workstation.CurrentUnit;
+            unitLog.Workstation = model.Workstation;
+            unitLog.EventDate = DateTime.Now;
+            unitLog.Event = logEvent;
+            _context.Add(unitLog);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: WorkstationKioskController/Details/5
@@ -69,7 +90,7 @@ namespace Flow.Controllers
 
         
         // GET: WorkstationKioskController/Create
-        public ActionResult Create()
+        public ActionResult CheckInPart()
         {
             return View();
         }
@@ -77,16 +98,21 @@ namespace Flow.Controllers
         // POST: WorkstationKioskController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public async Task<IActionResult> CheckInPart([Bind("ID,UnitNumber")] Unit unit)
         {
-            try
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            unit.UnitType = _context.UnitTypes.Where(u => u.Prefix == unit.UnitNumber.Substring(0, 4)).FirstOrDefault();
+            _context.Workstations.Where(w => w.CurrentUser.Id == userId).FirstOrDefault().CurrentUnit = unit;
+
+
+
+            if (ModelState.IsValid)
             {
+                _context.Add(unit);
+                await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            catch
-            {
-                return View();
-            }
+            return View();
         }
 
         // GET: WorkstationKioskController/Edit/5

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Flow.Models.Logs;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -17,7 +18,6 @@ namespace Flow.Models
 
         [ForeignKey("UnitType")]
         public int UnitTypeID { get; set; }
-
         public virtual UnitType UnitType { get; set; }
     }
 }
