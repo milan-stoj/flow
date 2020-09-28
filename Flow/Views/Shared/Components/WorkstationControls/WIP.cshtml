@@ -10,7 +10,7 @@
         <a asp-action="CheckOutPart" asp-route-id="@Model.Workstation.ID" class="btn btn-block btn-warning shadow">Check-out Part</a>
     </div>
     <div class="col-sm">
-        <a asp-action="CompletePart" class="btn btn-block btn-success">Complete Part</a>
+        <a asp-action="CompletePart" asp-route-id="@Model.Workstation.ID" class="btn btn-block btn-success">Complete Part</a>
     </div>
 </div>
 

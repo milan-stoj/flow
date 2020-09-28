@@ -15,5 +15,13 @@ namespace Flow.ViewModels
         public int ActiveDepartments { get; set; }
         public int ActiveWorkstations { get; set; }
         public int UnitTypes { get; set; }
+        public int CompletedUnits { get; set; }
+        public double EarnedHours { get; set; }
+        public double PlantEfficiency { get; set; }
+
+        public double Utilization { get; set; }
+
+
+        
     }
 }

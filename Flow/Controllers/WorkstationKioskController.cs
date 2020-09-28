@@ -76,7 +76,7 @@ namespace Flow.Controllers
         {
             if (id == null)
             {
-                var applicationDbContext = _context.Workstations.Include(w => w.Department);
+                var applicationDbContext = _context.Workstations.Include(w => w.Department).Where(w => w.CurrentUser == null);
                 return View(await applicationDbContext.ToListAsync());
             }
 
@@ -90,8 +90,11 @@ namespace Flow.Controllers
 
         public async Task<IActionResult> Logout(int? id)
         {
-            var entity = _context.Workstations.Include(w => w.CurrentUser).FirstOrDefaultAsync(w => w.ID == id).Result;
-            CheckOutPart(id).Wait();
+            var entity = _context.Workstations.Include(w => w.CurrentUser).Include(w=>w.CurrentUnit).FirstOrDefaultAsync(w => w.ID == id).Result;
+            if(entity.CurrentUnit != null)
+            {
+                CheckOutPart(id).Wait();
+            }
             entity.CurrentUser = null;
             entity.Online = false;
             _context.SaveChanges();
@@ -249,57 +252,45 @@ namespace Flow.Controllers
             }
             return RedirectToAction("Index");
         }
-        public async Task<IActionResult> CompletePart(WorkstationKioskViewModel model)
+        public async Task<IActionResult> CompletePart(int? id)
         {
-            var userTry = _context.Users.Where(u => u.Email == model.ApplicationUser.Email).FirstOrDefault();
+            var entity = _context.Workstations
+                .Include(w => w.CurrentUser)
+                .Include(w => w.CurrentUnit).Include(u => u.CurrentUnit.UnitType)
+                .FirstOrDefaultAsync(w => w.ID == id).Result;
 
-            if(userTry.UserRole == "QA" && userTry != null)
+            DateTime workStart = _context.UnitLogs.Where(u => u.Unit == entity.CurrentUnit).OrderByDescending(u => u.EventDate).First(u => u.Event == "CHECKIN").EventDate;
+            DateTime unitStart = _context.UnitLogs.Where(u => u.Unit == entity.CurrentUnit).OrderBy(u => u.EventDate).First().EventDate;
+
+            double valueAdd = TimeDifference(workStart);
+            double completionTime = TimeDifference(unitStart);
+            double eff = completionTime / entity.CurrentUnit.UnitType.StandardRate;
+
+            var newLog = new UnitLog
             {
-                var entity = _context.Workstations
-                    .Include(w => w.CurrentUser)
-                    .Include(w => w.CurrentUnit)
-                    .FirstOrDefaultAsync(w => w.ID == model.Workstation.ID).Result;
+                ApplicationUser = entity.CurrentUser,
+                Unit = entity.CurrentUnit,
+                Workstation = entity,
+                EventDate = DateTime.Now,
+                ValueAddedTime = valueAdd,
+                CompletionTime = completionTime,
+                Efficiency = eff,
+                Event = "COMPLETE"
+            };
 
-                DateTime holdStart = _context.UnitLogs.Where(u => u.Unit == entity.CurrentUnit).OrderByDescending(u => u.EventDate).First(u => u.Event == "QA HOLD").EventDate;
-                double nonValueAdd = TimeDifference(holdStart);
-                    
-                var newLog = new UnitLog
-                {
-                    ApplicationUser = entity.CurrentUser,
-                    Unit = entity.CurrentUnit,
-                    Workstation = entity,
-                    EventDate = DateTime.Now,
-                    NonValueAddedTime = nonValueAdd,
-                    Event = "GREEN TAG"
-                };
-                await _context.AddAsync(newLog);
-                entity.CurrentUnit.QA = false;
-                _context.SaveChanges();
-                return RedirectToAction("Index");
-            }
+            await _context.AddAsync(newLog);
+
+            entity.CurrentUnit = null;
+
+            _context.SaveChanges();
+
             return RedirectToAction("Index");
         }
 
-        // GET: WorkstationKioskController/Delete/5
         public double TimeDifference(DateTime start)
         {
             TimeSpan ts = DateTime.Now - start;
             return (double)ts.TotalMinutes;
-        }
-
-        // POST: WorkstationKioskController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
         }
     }
 }

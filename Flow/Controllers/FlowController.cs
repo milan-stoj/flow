@@ -33,7 +33,7 @@ namespace Flow.Controllers
             return View(flowIndexViewModel);
         }
 
-        public IActionResult GetChartData()
+        public IActionResult GetWorkstationDepartmentData()
         {
             var data = _context.Workstations
                 .GroupBy(w => w.Department.Name)
@@ -47,6 +47,31 @@ namespace Flow.Controllers
                         
             return Json(data);
         }
+
+        public IActionResult GetWorkCompletionData()
+        {
+            var data = _context.UnitLogs.Where(l => l.Event == "COMPLETE")
+                .GroupBy(w => w.ApplicationUser.FirstName)
+                .Select(grp => new
+                {
+                    Name = grp.Key,
+                    Count = grp.Count()
+                })
+                .OrderBy(o => o.Count)
+                .ToList();
+                        
+            return Json(data);
+        }
+
+        public IActionResult GetUtilizationData()
+        {
+            double workstations = _context.Workstations.Count();
+            double utilized = _context.Workstations.Where(w => w.CurrentUnit != null).Count();
+            double data = utilized / workstations;
+            return Json(data);
+        }
+        
+        
 
         //public IActionResult GetCompletionData()
         //{
