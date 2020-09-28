@@ -46,11 +46,11 @@ namespace Flow.Controllers
                     UnitLog = _context.UnitLogs.Where(w => w.Unit == _context.Workstations.Where(w => w.CurrentUser.Id == userId).FirstOrDefault().CurrentUnit).ToList()
                 };
 
-                if (workstationKioskViewModel.UnitLog.Count == 0)
+                if (workstationKioskViewModel.UnitLog.Count == 0 && workstationKioskViewModel.Workstation.CurrentUnit != null)
                 {
                     await CreateLog(workstationKioskViewModel, "INIT");
+                    workstationKioskViewModel.UnitLog = _context.UnitLogs.Where(w => w.Unit == _context.Workstations.Where(w => w.CurrentUser.Id == userId).FirstOrDefault().CurrentUnit).ToList();
                 }
-
                 return View(workstationKioskViewModel);
             }
         }
@@ -63,9 +63,9 @@ namespace Flow.Controllers
             unitLog.Workstation = model.Workstation;
             unitLog.EventDate = DateTime.Now;
             unitLog.Event = logEvent;
-            _context.Add(unitLog);
+            await _context.AddAsync(unitLog);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("Index");
         }
 
         // GET: WorkstationKioskController/Details/5
@@ -83,9 +83,10 @@ namespace Flow.Controllers
 
         public async Task<IActionResult> Logout(int? id)
         {
-            _context.Workstations.FirstOrDefaultAsync(w => w.ID == id).Result.CurrentUser = default;
+            var entity = _context.Workstations.Include(w => w.CurrentUser).FirstOrDefaultAsync(w => w.ID == id).Result;
+            entity.CurrentUser = null;
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("Index", "Home");
         }
 
         
@@ -101,24 +102,52 @@ namespace Flow.Controllers
         public async Task<IActionResult> CheckInPart([Bind("ID,UnitNumber")] Unit unit)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            unit.UnitType = _context.UnitTypes.Where(u => u.Prefix == unit.UnitNumber.Substring(0, 4)).FirstOrDefault();
-            _context.Workstations.Where(w => w.CurrentUser.Id == userId).FirstOrDefault().CurrentUnit = unit;
-
-
-
-            if (ModelState.IsValid)
+            var UnitHistory = _context.Units.Any(u => u.UnitNumber == unit.UnitNumber);
+            if (UnitHistory == false)
             {
-                _context.Add(unit);
+                unit.UnitType = _context.UnitTypes.Where(u => u.Prefix == unit.UnitNumber.Substring(0, 4)).FirstOrDefault();
+                _context.Workstations.Where(w => w.CurrentUser.Id == userId).FirstOrDefault().CurrentUnit = unit;
+
+                if (ModelState.IsValid)
+                {
+                    _context.Add(unit);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
+                return View();
+            }
+            _context.Workstations.Where(w => w.CurrentUser.Id == userId).FirstOrDefault().CurrentUnit = _context.Units
+                .Include(u => u.UnitType)
+                .FirstOrDefaultAsync(u => u.UnitNumber == unit.UnitNumber)
+                .Result;
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
-            }
-            return View();
         }
 
         // GET: WorkstationKioskController/Edit/5
-        public ActionResult Edit(int id)
+        public async Task<IActionResult> CheckOutPart(int? id)
         {
-            return View();
+            var entity = _context.Workstations
+                .Include(w => w.CurrentUser)
+                .Include(w => w.CurrentUnit)
+                .FirstOrDefaultAsync(w => w.ID == id).Result;
+            _context.Workstations.Update(entity);
+
+            var log = _context.UnitLogs.Where(l => l.UnitID == entity.CurrentUnit.ID).FirstOrDefaultAsync();
+            var newLog = new UnitLog();
+            newLog.ApplicationUser = entity.CurrentUser;
+            newLog.UnitID = entity.CurrentUnit.ID;
+            newLog.Workstation = entity;
+            newLog.EventDate = DateTime.Now;
+            newLog.Event = "CHECKOUT";
+
+            await _context.AddAsync(newLog);
+
+            entity.CurrentUnit = null;
+
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("Index");
         }
 
         // POST: WorkstationKioskController/Edit/5

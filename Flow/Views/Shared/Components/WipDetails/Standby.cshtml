@@ -1,38 +1,30 @@
-﻿@model UnitType
+﻿@model Flow.ViewModels.WorkstationKioskViewModel
 
 @{
     ViewData["Title"] = "Details";
 }
 
-<h1 class="display-4">Job Details</h1>
+<div class="container" style="width: 50%; height: 500px">
+    <div class="row dash-card bg-secondary text-dark" style="height: 400px">
+        <div class="card-body container">
+            <div class="row">
+                <div class="col">
+                    <h1 class="display-4 text-center">No Unit Checked-in</h1>
+                    <div>
+                        <table class="table">
+                            <thead>
+                                <tr>
 
-<div>
-    <h4>No unit checked in</h4>
-    <hr />
-    <dl class="row text-black-50">
-        <dt class="col-sm-5">
-            @Html.DisplayNameFor(model => model.Prefix)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Prefix)
-        </dd>
-        <dt class="col-sm-5">
-            @Html.DisplayNameFor(model => model.Description)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Description)
-        </dd>
-        <dt class="col-sm-5">
-            @Html.DisplayNameFor(model => model.WorkInstructions)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.WorkInstructions)
-        </dd>
-        <dt class="col-sm-5">
-            @Html.DisplayNameFor(model => model.StandardRate)
-        </dt>
-        <dd class="col-sm-10">
-        </dd>
-    </dl>
-    <a asp-action="CheckInPart" class="btn btn-success mt-auto">Check In Part</a>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+   </div>
 </div>

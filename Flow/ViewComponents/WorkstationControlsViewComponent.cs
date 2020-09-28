@@ -10,23 +10,28 @@ using System.Threading.Tasks;
 
 namespace Flow.ViewComponents
 {
-    public class WipDetailsViewComponent : ViewComponent
+    public class WorkstationControlsViewComponent : ViewComponent
     {
         private readonly ApplicationDbContext _context;
 
-        public WipDetailsViewComponent(ApplicationDbContext context)
+        public WorkstationControlsViewComponent(ApplicationDbContext context)
         {
             _context = context;
         }
 
         public IViewComponentResult Invoke(WorkstationKioskViewModel model)
         {
-            string view = "Default";
             if(model.Workstation.CurrentUnit == null)
             {
-                view = "Standby";
+                return View("Standby");
+            } 
+
+            if(model.Workstation.CurrentUnit.QA == true)
+            {
+                return View("Hold");
             }
-            return View(view, model);
+            return View("WIP");
         }
+
     }
 }

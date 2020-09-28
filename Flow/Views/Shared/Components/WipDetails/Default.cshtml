@@ -1,40 +1,88 @@
-﻿@model Unit
+﻿@model Flow.ViewModels.WorkstationKioskViewModel
 
 @{
     ViewData["Title"] = "Details";
 }
 
-<h1 class="display-4">Job Details</h1>
-
-<div>
-    <h4>Work has Started</h4>
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-5">
-            @Html.DisplayNameFor(model => model.UnitNumber)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.UnitNumber)
-        </dd>
-        <dt class="col-sm-5">
-            @Html.DisplayNameFor(model => model.UnitType.Description)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.UnitType.Description)
-        </dd>
-        <dt class="col-sm-5">
-            @Html.DisplayNameFor(model => model.UnitType.WorkInstructions)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.UnitType.WorkInstructions)
-        </dd>
-        <dt class="col-sm-5">
-            @Html.DisplayNameFor(model => model.UnitType.StandardRate)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.UnitType.StandardRate)
-        </dd>
-        <dd class="col-sm-10">
-        </dd>
-    </dl>
+<div class="container">
+    <div class="row dash-card bg-light text-dark">
+        <div class="card-body container">
+            <div class="row">
+                <div class="col">
+                    <h1 class="display-4">Job Details</h1>
+                    <div>
+                        <dl class="row">
+                            <dt class="col-sm-5">
+                                @Html.DisplayNameFor(model => model.Workstation.CurrentUnit.UnitNumber)
+                            </dt>
+                            <dd class="col-sm-10">
+                                @Html.DisplayFor(model => model.Workstation.CurrentUnit.UnitNumber)
+                            </dd>
+                            <dt class="col-sm-5">
+                                @Html.DisplayNameFor(model => model.Workstation.CurrentUnit.UnitType.Description)
+                            </dt>
+                            <dd class="col-sm-10">
+                                @Html.DisplayFor(model => model.Workstation.CurrentUnit.UnitType.Description)
+                            </dd>
+                            <dt class="col-sm-5">
+                                @Html.DisplayNameFor(model => model.Workstation.CurrentUnit.UnitType.WorkInstructions)
+                            </dt>
+                            <dd class="col-sm-10">
+                                @Html.Raw(Model.Workstation.CurrentUnit.UnitType.WorkInstructions.Replace(Environment.NewLine, "<br/>"))
+                            </dd>
+                            <dt class="col-sm-5">
+                                @Html.DisplayNameFor(model => model.Workstation.CurrentUnit.UnitType.StandardRate)
+                            </dt>
+                            <dd class="col-sm-10">
+                                <h3 class="badge badge-dark" style="font-size: 2rem">@Html.DisplayFor(model => model.Workstation.CurrentUnit.UnitType.StandardRate)</h3>
+                            </dd>
+                            <dd class="col-sm-10">
+                            </dd>
+                        </dl>
+                    </div>
+                </div>
+                <div class="col">
+                    <h1 class="display-4">Traveler</h1>
+                    <div>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.UnitLog.FirstOrDefault().EventDate)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.UnitLog.FirstOrDefault().Event)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.UnitLog.FirstOrDefault().ApplicationUser.FirstName)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.UnitLog.FirstOrDefault().Workstation.Code)
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                        @foreach (var item in Model.UnitLog) {
+                                <tr>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.EventDate)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Event)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.ApplicationUser.FirstName)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Workstation.Code)
+                                    </td>
+                                </tr>
+                        }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+   </div>
 </div>
