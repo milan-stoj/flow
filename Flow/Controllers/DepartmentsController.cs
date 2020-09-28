@@ -37,7 +37,7 @@ namespace Flow.Controllers
             DepartmentDetailsViewModel departmentDetailsViewModel = new DepartmentDetailsViewModel()
             {
                 Department = await _context.Departments.FirstOrDefaultAsync(d => d.ID == id),
-                Workstations = _context.Workstations.Where(w => w.DepartmentID == id)
+                Workstations = _context.Workstations.Where(w => w.DepartmentID == id).Include(w => w.CurrentUser).Include(w => w.CurrentUnit)
             };
 
             if (departmentDetailsViewModel.Department == null)

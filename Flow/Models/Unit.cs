@@ -11,8 +11,9 @@ namespace Flow.Models
     {
         [Key]
         public int ID { get; set; }
-
         public string UnitNumber { get; set; } // Scanned in as QR string with gun.
+
+        public bool QA { get; set; }
 
         [ForeignKey("UnitType")]
         public int UnitTypeID { get; set; }

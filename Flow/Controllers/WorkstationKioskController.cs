@@ -1,11 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Flow.Data;
+using Flow.Models;
+using Flow.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Flow.Controllers
 {
@@ -13,29 +18,56 @@ namespace Flow.Controllers
     public class WorkstationKioskController : Controller
     {
         private readonly ApplicationDbContext _context;
-        public WorkstationKioskController(ApplicationDbContext context)
+        private readonly IApplicationUserRepository _applicationUserRepository;
+
+        public WorkstationKioskController(ApplicationDbContext context, IApplicationUserRepository applicationUserRepository)
         {
             _context = context;
+            _applicationUserRepository = applicationUserRepository;
         }
         
         // GET: WorkstationKioskController
-        public ActionResult Index()
+        public async Task<IActionResult> Index()
         {
-
-            //if (id == null)
-            //{
-            //    return NotFound();
-            //}
-
-            return View();
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var WorkstationLink = _context.Workstations.Any(w => w.CurrentUser.Id == userId);
+            if (WorkstationLink == false)
+            {
+                return RedirectToAction(nameof(Login));
+            }
+            else
+            {
+                WorkstationKioskViewModel workstationKioskViewModel = new WorkstationKioskViewModel()
+                {
+                    ApplicationUser = _applicationUserRepository.GetApplicationUser(User.FindFirstValue(ClaimTypes.NameIdentifier)),
+                    Department = _context.Workstations.Where(w => w.CurrentUser.Id == userId).Select(w => w.Department).FirstOrDefault(),
+                    Workstation = _context.Workstations.Where(w => w.CurrentUser.Id == userId).FirstOrDefault()
+                };
+                return View(workstationKioskViewModel);
+            }
         }
 
         // GET: WorkstationKioskController/Details/5
-        public ActionResult Details(int id)
+        public async Task<IActionResult> Login(int? id)
         {
-            return View();
+            if (id == null)
+            {
+                var applicationDbContext = _context.Workstations.Include(w => w.Department);
+                return View(await applicationDbContext.ToListAsync());
+            }
+            _context.Workstations.FirstOrDefaultAsync(w => w.ID == id).Result.CurrentUser = _applicationUserRepository.GetApplicationUser(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
         }
 
+        public async Task<IActionResult> Logout(int? id)
+        {
+            _context.Workstations.FirstOrDefaultAsync(w => w.ID == id).Result.CurrentUser = default;
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+
+        
         // GET: WorkstationKioskController/Create
         public ActionResult Create()
         {

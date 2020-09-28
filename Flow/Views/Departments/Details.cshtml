@@ -74,7 +74,7 @@
                     @Html.DisplayFor(modelItem => item.CurrentUnit)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.CurrentUser)
+                    @Html.DisplayFor(modelItem => item.CurrentUser.Email)
                 </td>
                 <td>
                     <a asp-controller="Workstations" asp-action="Edit" asp-route-id="@item.ID">Edit</a> |

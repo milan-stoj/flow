@@ -9,10 +9,8 @@ namespace Flow.ViewModels
     public class WorkstationKioskViewModel
     {
         public Department Department { get; set; }
-
-
-
-
+        public Workstation Workstation { get; set; }
+        public ApplicationUser ApplicationUser { get; set; }
 
     }
 }

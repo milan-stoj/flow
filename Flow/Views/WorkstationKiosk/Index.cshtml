@@ -1,24 +1,46 @@
-﻿@{
-    ViewData["Title"] = "Index";
+﻿@model Flow.ViewModels.WorkstationKioskViewModel
+
+@{
+    ViewData["Title"] = "Kiosk";
 }
 
 
-<div class="container">
-    <div class="row">
+<div class="dash-card bg-c-dark">
+    <div class="row align-items-center">
         <div class="col-sm">
-            <h1 class="display-4">
-                Workstation
-            </h1>
+            <a class="display-4 pl-3" style="font-size: 2.5rem">
+                Department @Model.Department.Code
+            </a>
+            <br />
+            <a class="display-4 pl-3" style="font-size: 1.5rem">
+                @Model.Department.Name
+            </a>
+        </div>
+        <div class="col-sm text-center">
+            <div class="d-flex justify-content-center align-items-center">
+                <div class="bd-highlight px-5">
+                    @await Component.InvokeAsync("Status", new {workstation = Model.Workstation})
+                </div>
+                <div class="bd-highlight">
+                    <a class="display-4" style="font-size: 2.5rem">
+                        Station @Model.Workstation.Code
+                        <br />
+
+                        <a class="display-4" style="font-size: 1.5rem">
+                            @Model.ApplicationUser.FirstName @Model.ApplicationUser.LastName
+                        </a>
+                    </a>
+                </div>
+                <div class="bd-highlight px-5">
+                    @await Component.InvokeAsync("Status", new {workstation = Model.Workstation})
+                </div>
+            </div>
         </div>
         <div class="col-sm">
-            One of three columns
-        </div>
-        <div class="col-sm">
-            @await Component.InvokeAsync("Clock") 
+            @await Component.InvokeAsync("Clock")
         </div>
     </div>
 </div>
 
-<div class="jumbotron jumbotron-fluid">
 
-</div>
+

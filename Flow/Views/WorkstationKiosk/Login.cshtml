@@ -1,1 +1,49 @@
-﻿
+﻿@model IEnumerable<Flow.Models.Workstation>
+
+@{
+    ViewData["Title"] = "Login to Workstation";
+}
+
+<h1 class="display-4">Select Current Workstation</h1>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>
+                Department - Workstation
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Online)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.QA)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Department.Name) @Html.DisplayFor(modelItem => item.DepartmentID)-@Html.DisplayFor(modelItem => item.Code)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Online)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.QA)
+                </td>
+                <td>
+                    <a asp-action="Login" asp-route-id="@item.ID" class="btn btn-success btn-sm btn-block">Select</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
