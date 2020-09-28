@@ -71,11 +71,5 @@ namespace Flow.Controllers
             return Json(data);
         }
         
-        
-
-        //public IActionResult GetCompletionData()
-        //{
-
-        //}
     }
 }

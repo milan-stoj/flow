@@ -21,14 +21,12 @@ namespace Flow.Controllers
             _context = context;
         }
 
-        // GET: Employees
         public async Task<IActionResult> Index()
         {
             var applicationDbContext = _context.Users;
             return View(await applicationDbContext.ToListAsync());
         }
 
-        // GET: Employees/Details/5
         public async Task<IActionResult> Details(string? id)
         {
             if (id == null)
@@ -69,9 +67,6 @@ namespace Flow.Controllers
             return View(applicationUser);
         }
 
-        // POST: Employees/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(string id, [Bind("Id,UserRole,Email")] ApplicationUser applicationUser)
@@ -104,7 +99,6 @@ namespace Flow.Controllers
             return View(applicationUser);
         }
 
-        // GET: Employees/Delete/5
         public async Task<IActionResult> Delete(string? id)
         {
             if (id == null)
@@ -121,7 +115,6 @@ namespace Flow.Controllers
             return View(employee);
         }
 
-        // POST: Employees/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(string id)

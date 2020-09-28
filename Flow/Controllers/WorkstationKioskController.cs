@@ -28,7 +28,6 @@ namespace Flow.Controllers
             _applicationUserRepository = applicationUserRepository;
         }
         
-        // GET: WorkstationKioskController
         public async Task<IActionResult> Index()
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -71,7 +70,6 @@ namespace Flow.Controllers
             return RedirectToAction("Index");
         }
 
-        // GET: WorkstationKioskController/Details/5
         public async Task<IActionResult> Login(int? id)
         {
             if (id == null)
@@ -102,13 +100,11 @@ namespace Flow.Controllers
         }
 
         
-        // GET: WorkstationKioskController/Create
         public ActionResult CheckInPart()
         {
             return View();
         }
 
-        // POST: WorkstationKioskController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CheckInPart([Bind("ID,UnitNumber")] Unit unit)
@@ -160,7 +156,6 @@ namespace Flow.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // GET: WorkstationKioskController/Edit/5
         public async Task<IActionResult> CheckOutPart(int? id)
         {
             var entity = _context.Workstations
@@ -190,7 +185,6 @@ namespace Flow.Controllers
             return RedirectToAction("Index");
         }
 
-        // POST: WorkstationKioskController/Edit/5
         public async Task<IActionResult> HoldPart(int? id)
         {
             var entity = _context.Workstations
