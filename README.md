@@ -1,2 +1,2 @@
 # flow
-A production/workstation workflow management and dashboard.
+A production/workstation workflow management solution.
