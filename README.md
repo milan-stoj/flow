@@ -1,2 +1,2 @@
 # flow
-Production workflow management application.
+A production/workstation workflow management and dashboard.
