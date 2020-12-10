@@ -2,10 +2,10 @@
 A production/workstation workflow management solution.
 
 ## Main Screen
-![alt text](https://ibb.co/bF13xnd)
+![alt text](https://i.ibb.co/FX6W9t7/main.png)
 
 ## Dashboard
-![alt text](https://ibb.co/WVTnX14)
+![alt text](https://i.ibb.co/qJZB8w3/dash.png)
 
 ## Workstation Kiosk
-![alt text](https://ibb.co/cLfbhTn)
+![alt text](https://i.ibb.co/fv68d0w/workstation.png)
