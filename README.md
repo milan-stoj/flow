@@ -1,5 +1,5 @@
 # flow
-A production/workstation workflow management solution.
+A production workflow management solution.
 
 ## Main Screen
 ![alt text](https://i.ibb.co/FX6W9t7/main.png)
