@@ -1,5 +1,5 @@
 # flow
-A production workflow management solution.
+A production workflow management solution for tracking works-in-progress, and collecting/reporting manufacturing metrics.
 
 ## Main Screen
 ![alt text](https://i.ibb.co/FX6W9t7/main.png)
